@@ -1,0 +1,280 @@
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1a1f36;
+  --muted: #5f6b7a;
+  --brand: #1d4ed8;
+  --brand-dark: #1e40af;
+  --accent: #0ea5e9;
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --border: #e5e7eb;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav__brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav__logo {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.nav__title {
+  font-weight: 700;
+}
+
+.nav__subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.nav__links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--brand-dark);
+}
+
+.btn--outline {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.hero {
+  background: linear-gradient(120deg, #1e3a8a, #0ea5e9);
+  color: #fff;
+  padding: 64px 32px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 32px;
+}
+
+.hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.hero__title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hero__subtitle {
+  max-width: 640px;
+  margin-bottom: 24px;
+  color: #e0f2fe;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: var(--muted);
+}
+
+.section {
+  margin: 32px 0;
+}
+
+.section h2 {
+  margin-bottom: 16px;
+  font-size: 24px;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form__group {
+  display: grid;
+  gap: 8px;
+}
+
+input, select, textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  background: #fff;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.kpi {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin-top: 16px;
+}
+
+.kpi__item {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.table th, .table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 32px 24px 16px;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.footer__grid h4 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.footer__grid a {
+  color: #cbd5f5;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+  font-size: 12px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-header__title {
+  font-size: 28px;
+}
+
+.panel {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}

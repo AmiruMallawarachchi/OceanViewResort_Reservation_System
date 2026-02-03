@@ -1,0 +1,23 @@
+<footer class="footer">
+  <div class="footer__grid">
+    <div>
+      <h4>OceanView Resort</h4>
+      <p>Beachfront comfort with a modern reservation experience.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="<%= request.getContextPath() %>/index.jsp">Home</a></li>
+        <li><a href="<%= request.getContextPath() %>/about.jsp">About</a></li>
+        <li><a href="<%= request.getContextPath() %>/help.jsp">Help</a></li>
+        <li><a href="<%= request.getContextPath() %>/contact.jsp">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <p>Email: support@oceanviewresort.com</p>
+      <p>Phone: +94 91 123 4567</p>
+    </div>
+  </div>
+  <div class="footer__bottom">© 2026 OceanView Resort. All rights reserved.</div>
+</footer>

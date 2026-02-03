@@ -1,0 +1,16 @@
+<nav class="nav">
+  <div class="nav__brand">
+    <span class="nav__logo">OV</span>
+    <div>
+      <div class="nav__title">OceanView Resort</div>
+      <div class="nav__subtitle">Reservation System</div>
+    </div>
+  </div>
+  <div class="nav__links">
+    <a href="<%= request.getContextPath() %>/index.jsp">Home</a>
+    <a href="<%= request.getContextPath() %>/about.jsp">About</a>
+    <a href="<%= request.getContextPath() %>/help.jsp">Help</a>
+    <a href="<%= request.getContextPath() %>/contact.jsp">Contact</a>
+    <a class="btn btn--outline" href="<%= request.getContextPath() %>/login.jsp">Login</a>
+  </div>
+</nav>
