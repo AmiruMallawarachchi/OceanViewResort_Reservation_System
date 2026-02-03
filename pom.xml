@@ -33,6 +33,13 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- MySQL JDBC Driver -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.33</version>
+    </dependency>
   </dependencies>
   
   <build>
