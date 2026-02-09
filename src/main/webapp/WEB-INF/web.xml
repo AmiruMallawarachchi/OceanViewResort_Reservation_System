@@ -7,6 +7,100 @@
   
   <display-name>OceanView Resort Reservation System</display-name>
   
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>com.oceanview.resort.filter.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>com.oceanview.resort.listener.KafkaEmailListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>AuthController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.AuthController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthController</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UserController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.UserController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserController</servlet-name>
+    <url-pattern>/users</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>GuestController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.GuestController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GuestController</servlet-name>
+    <url-pattern>/guests</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RoomTypeController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.RoomTypeController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RoomTypeController</servlet-name>
+    <url-pattern>/room-types</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RoomController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.RoomController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RoomController</servlet-name>
+    <url-pattern>/rooms</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ReservationController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.ReservationController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReservationController</servlet-name>
+    <url-pattern>/reservations</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>BillController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.BillController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BillController</servlet-name>
+    <url-pattern>/bills</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ReportController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.ReportController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReportController</servlet-name>
+    <url-pattern>/reports</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DiscountController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.DiscountController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DiscountController</servlet-name>
+    <url-pattern>/discounts</url-pattern>
+  </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
