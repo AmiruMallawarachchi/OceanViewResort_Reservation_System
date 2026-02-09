@@ -21,8 +21,9 @@ CREATE TABLE IF NOT EXISTS guests (
   phone VARCHAR(30) NOT NULL,
   address VARCHAR(255) NOT NULL,
   id_type VARCHAR(40),
-  id_number VARCHAR(60),
+  id_number VARCHAR(60) UNIQUE,
   nationality VARCHAR(60),
+  guest_type VARCHAR(30) NOT NULL DEFAULT 'REGULAR',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,6 +44,7 @@ CREATE TABLE IF NOT EXISTS rooms (
   floor INT NOT NULL,
   status VARCHAR(30) NOT NULL,
   description VARCHAR(255),
+  is_full_access TINYINT(1) NOT NULL DEFAULT 0,
   FOREIGN KEY (room_type_id) REFERENCES room_types(id)
 );
 
@@ -87,3 +89,57 @@ CREATE TABLE IF NOT EXISTS reports (
   content LONGBLOB,
   FOREIGN KEY (generated_by) REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS discounts (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  discount_type VARCHAR(30) NOT NULL,
+  guest_type VARCHAR(30),
+  percent DECIMAL(5, 2) NOT NULL,
+  description VARCHAR(255),
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- ---------------------------------------------------------------------------
+-- Advanced database features: business rules in the database
+-- ---------------------------------------------------------------------------
+
+-- Audit log for reservation lifecycle (business rule: accountability)
+CREATE TABLE IF NOT EXISTS reservation_audit_log (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  reservation_id BIGINT NOT NULL,
+  reservation_no VARCHAR(40) NOT NULL,
+  action VARCHAR(20) NOT NULL,
+  performed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+);
+
+DELIMITER //
+-- Trigger: log every new reservation (business rule: audit trail)
+DROP TRIGGER IF EXISTS trg_reservation_after_insert//
+CREATE TRIGGER trg_reservation_after_insert
+  AFTER INSERT ON reservations
+  FOR EACH ROW
+BEGIN
+  INSERT INTO reservation_audit_log (reservation_id, reservation_no, action)
+  VALUES (NEW.id, NEW.reservation_no, 'CREATED');
+END//
+
+-- Stored procedure: return room IDs available for a date range (business rule: no double booking)
+DROP PROCEDURE IF EXISTS get_available_room_ids//
+CREATE PROCEDURE get_available_room_ids(IN p_check_in DATE, IN p_check_out DATE)
+BEGIN
+  SELECT r.id
+  FROM rooms r
+  WHERE r.id NOT IN (
+    SELECT res.room_id
+    FROM reservations res
+    WHERE res.status NOT IN ('CANCELLED')
+      AND (res.check_in < p_check_out AND res.check_out > p_check_in)
+  )
+  ORDER BY r.room_number;
+END//
+
+DELIMITER ;
