@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OceanView Resort | Home</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css" />
+  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260206" />
 </head>
 <body>
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
@@ -62,3 +62,4 @@
   <%@ include file="/WEB-INF/partials/footer.jspf" %>
 </body>
 </html>
+

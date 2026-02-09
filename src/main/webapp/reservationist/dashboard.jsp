@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reservationist Dashboard</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css" />
+  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260206" />
 </head>
 <body>
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
@@ -22,17 +22,22 @@
       <div class="card">
         <h3>Add Reservation</h3>
         <p>Create a new reservation for a guest.</p>
-        <a class="btn btn--primary" href="<%= request.getContextPath() %>/reservationist/reservations.jsp">Create</a>
+        <a class="btn btn--primary" href="<%= request.getContextPath() %>/reservations">Create</a>
       </div>
       <div class="card">
         <h3>Search Reservation</h3>
         <p>Find reservation details quickly.</p>
-        <a class="btn btn--outline" href="<%= request.getContextPath() %>/reservationist/reservations.jsp">Search</a>
+        <a class="btn btn--outline" href="<%= request.getContextPath() %>/reservations">Search</a>
       </div>
       <div class="card">
         <h3>Billing</h3>
         <p>Calculate and print guest bills.</p>
-        <a class="btn btn--outline" href="<%= request.getContextPath() %>/reservationist/billing.jsp">Generate Bill</a>
+        <a class="btn btn--outline" href="<%= request.getContextPath() %>/bills">Generate Bill</a>
+      </div>
+      <div class="card">
+        <h3>Guests</h3>
+        <p>Register and manage guest records.</p>
+        <a class="btn btn--outline" href="<%= request.getContextPath() %>/guests">Manage Guests</a>
       </div>
     </div>
 
@@ -48,3 +53,4 @@
   <%@ include file="/WEB-INF/partials/footer.jspf" %>
 </body>
 </html>
+

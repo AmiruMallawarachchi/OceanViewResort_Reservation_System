@@ -11,6 +11,39 @@
     <a href="<%= request.getContextPath() %>/about.jsp">About</a>
     <a href="<%= request.getContextPath() %>/help.jsp">Help</a>
     <a href="<%= request.getContextPath() %>/contact.jsp">Contact</a>
+    <%
+      Object userId = session == null ? null : session.getAttribute("userId");
+      String role = session == null ? null : (String) session.getAttribute("role");
+      boolean loggedIn = userId != null;
+      boolean isAdmin = loggedIn && role != null && "ADMIN".equalsIgnoreCase(role);
+      boolean isReservationist = loggedIn && role != null && "RESERVATIONIST".equalsIgnoreCase(role);
+    %>
+    <%
+      if (loggedIn) {
+    %>
+    <%
+      if (isAdmin) {
+    %>
+    <a href="<%= request.getContextPath() %>/admin/dashboard.jsp">Admin</a>
+    <%
+      } else if (isReservationist) {
+    %>
+    <a href="<%= request.getContextPath() %>/reservationist/dashboard.jsp">Dashboard</a>
+    <a href="<%= request.getContextPath() %>/guests">Guests</a>
+    <a href="<%= request.getContextPath() %>/bills">Billing</a>
+    <%
+      }
+    %>
+    <form method="post" action="<%= request.getContextPath() %>/auth" style="display:inline;">
+      <input type="hidden" name="action" value="logout" />
+      <button class="btn btn--outline" type="submit">Logout</button>
+    </form>
+    <%
+      } else {
+    %>
     <a class="btn btn--outline" href="<%= request.getContextPath() %>/login.jsp">Login</a>
+    <%
+      }
+    %>
   </div>
 </nav>

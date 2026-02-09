@@ -1,0 +1,16 @@
+<%
+  String flashSuccess = session == null ? null : (String) session.getAttribute("flashSuccess");
+  String flashError = session == null ? null : (String) session.getAttribute("flashError");
+  if (flashSuccess != null) {
+%>
+  <div class="alert alert--success"><%= flashSuccess %></div>
+<%
+    session.removeAttribute("flashSuccess");
+  }
+  if (flashError != null) {
+%>
+  <div class="alert alert--error"><%= flashError %></div>
+<%
+    session.removeAttribute("flashError");
+  }
+%>

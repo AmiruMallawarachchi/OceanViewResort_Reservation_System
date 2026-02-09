@@ -31,6 +31,10 @@ a {
   text-decoration: none;
 }
 
+.muted {
+  color: var(--muted);
+}
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
@@ -89,6 +93,7 @@ a {
   border: 1px solid transparent;
   font-weight: 600;
   display: inline-block;
+  cursor: pointer;
 }
 
 .btn--primary {
@@ -103,6 +108,12 @@ a {
 .btn--outline {
   border-color: var(--brand);
   color: var(--brand);
+  background: transparent;
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  font-size: 12px;
 }
 
 .hero {
@@ -112,6 +123,17 @@ a {
   border-radius: 20px;
   box-shadow: var(--shadow);
   margin-bottom: 32px;
+}
+
+.hero .btn--outline {
+  border-color: #fff;
+  color: #fff;
+  background: transparent;
+}
+
+.hero .btn--outline:hover {
+  background: #fff;
+  color: var(--brand-dark);
 }
 
 .hero__pill {
@@ -189,6 +211,129 @@ input, select, textarea {
   background: #fff;
 }
 
+.input--error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.form__error {
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.form__hint {
+  color: var(--muted);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px dashed var(--border);
+}
+
+.form__hint--error {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.35);
+  background: #fef2f2;
+}
+
+.form__hint--success {
+  color: var(--success);
+  border-color: rgba(22, 163, 74, 0.35);
+  background: #ecfdf5;
+}
+
+.password-strength {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+}
+
+.password-strength__bar {
+  background: #e5e7eb;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.password-strength__fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--danger);
+  transition: width 0.2s ease;
+}
+
+.password-strength__text {
+  font-weight: 600;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.password-strength__text::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+}
+
+.password-strength[data-strength="good"] .password-strength__fill {
+  background: var(--warning);
+}
+
+.password-strength[data-strength="good"] .password-strength__text::before {
+  background: var(--warning);
+}
+
+.password-strength[data-strength="strong"] .password-strength__fill {
+  background: var(--success);
+}
+
+.password-strength[data-strength="strong"] .password-strength__text::before {
+  background: var(--success);
+}
+
+.password-requirements {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+}
+
+.password-requirements li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-requirements li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5f5;
+}
+
+.password-requirements li.ok {
+  color: var(--success);
+}
+
+.password-requirements li.ok::before {
+  background: var(--success);
+}
+
 textarea {
   min-height: 120px;
   resize: vertical;
@@ -224,10 +369,46 @@ textarea {
   margin-top: 12px;
 }
 
+.table-filters {
+  margin: 12px 0 16px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filters__group {
+  min-width: 160px;
+  flex: 1;
+}
+
+.filters__group--search {
+  min-width: 220px;
+  flex: 2;
+}
+
+.filters input,
+.filters select {
+  width: 100%;
+}
+
 .table th, .table td {
   text-align: left;
   padding: 12px;
   border-bottom: 1px solid var(--border);
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.table-actions form {
+  display: inline;
 }
 
 .footer {
@@ -277,4 +458,23 @@ textarea {
   border-radius: 16px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border: 1px solid transparent;
+}
+
+.alert--success {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.alert--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
 }

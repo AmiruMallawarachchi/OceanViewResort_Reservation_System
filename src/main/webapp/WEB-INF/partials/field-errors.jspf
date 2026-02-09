@@ -1,0 +1,7 @@
+<%@ page import="java.util.Map" %>
+<%
+  Map<String, String> fieldErrors = (Map<String, String>) session.getAttribute("fieldErrors");
+  if (fieldErrors != null) {
+    session.removeAttribute("fieldErrors");
+  }
+%>
