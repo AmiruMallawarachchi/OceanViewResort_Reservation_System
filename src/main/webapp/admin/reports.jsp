@@ -28,6 +28,8 @@
             <option value="OCCUPANCY">Occupancy</option>
             <option value="REVENUE">Revenue</option>
             <option value="RESERVATION">Reservation</option>
+            <option value="GUEST_SEGMENT">Guest Segment</option>
+            <option value="DISCOUNT_PERFORMANCE">Discount Performance</option>
           </select>
         </div>
         <div class="form__group">

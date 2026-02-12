@@ -86,7 +86,36 @@
           %>
           <div class="form__group">
             <label>Password</label>
-            <input type="password" id="createPassword" name="password" placeholder="Temporary password" autocomplete="new-password" minlength="8" class="<%= fieldErrors != null && fieldErrors.get("password") != null ? "input--error" : "" %>" required />
+            <div class="password-input">
+              <input
+                  type="password"
+                  id="createPassword"
+                  name="password"
+                  placeholder="Temporary password"
+                  autocomplete="new-password"
+                  minlength="8"
+                  class="<%= fieldErrors != null && fieldErrors.get("password") != null ? "input--error" : "" %>"
+                  required />
+              <button type="button" class="password-toggle" id="toggleCreatePassword" aria-label="Show password">
+                <span class="password-toggle__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Eye outline -->
+                    <path class="icon-eye__outline"
+                          d="M2.5 12C4.1 8.6 7.7 6 12 6s7.9 2.6 9.5 6c-1.6 3.4-5.2 6-9.5 6S4.1 15.4 2.5 12Z"
+                          fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                    <!-- Pupil -->
+                    <circle class="icon-eye__pupil" cx="12" cy="12" r="3"
+                            fill="currentColor" fill-opacity="0.65" />
+                    <!-- Slash (shown when visible) -->
+                    <path class="icon-eye__slash"
+                          d="M5 5l14 14"
+                          fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </button>
+            </div>
             <%
               if (fieldErrors != null && fieldErrors.get("password") != null) {
             %>
@@ -227,6 +256,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var passwordInput = document.getElementById("createPassword");
+      var passwordToggle = document.getElementById("toggleCreatePassword");
       var strengthText = document.getElementById("passwordStrengthText");
       var strengthFill = document.getElementById("passwordStrengthFill");
       var strengthWrap = document.getElementById("passwordStrength");
@@ -276,7 +306,8 @@
           length: value.length >= 8,
           lower: /[a-z]/.test(value),
           upper: /[A-Z]/.test(value),
-          number: /\\d/.test(value),
+          // Use explicit [0-9] character class for robustness
+          number: /[0-9]/.test(value),
           special: /[^A-Za-z0-9]/.test(value)
         };
 
@@ -309,6 +340,15 @@
       if (passwordInput) {
         passwordInput.addEventListener("input", updatePasswordStrength);
         updatePasswordStrength();
+      }
+
+      if (passwordInput && passwordToggle) {
+        passwordToggle.addEventListener("click", function () {
+          var isPassword = passwordInput.type === "password";
+          passwordInput.type = isPassword ? "text" : "password";
+          passwordToggle.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+          passwordToggle.classList.toggle("password-toggle--visible", !isPassword);
+        });
       }
     });
   </script>

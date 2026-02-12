@@ -24,7 +24,7 @@
     <%
       if (isAdmin) {
     %>
-    <a href="<%= request.getContextPath() %>/admin/dashboard.jsp">Admin</a>
+    <a href="<%= request.getContextPath() %>/admin/dashboard">Admin</a>
     <%
       } else if (isReservationist) {
     %>

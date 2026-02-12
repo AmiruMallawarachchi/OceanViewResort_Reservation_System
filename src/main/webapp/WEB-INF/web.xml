@@ -9,7 +9,7 @@
   
   <filter>
     <filter-name>AuthFilter</filter-name>
-    <filter-class>com.oceanview.resort.filter.AuthFilter</filter-class>
+    <filter-class>com.oceanview.resort.security.AuthFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
@@ -17,7 +17,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>com.oceanview.resort.listener.KafkaEmailListener</listener-class>
+    <listener-class>com.oceanview.resort.messaging.KafkaEmailListener</listener-class>
   </listener>
 
   <servlet>
@@ -27,6 +27,15 @@
   <servlet-mapping>
     <servlet-name>AuthController</servlet-name>
     <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>GoogleAuthController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.GoogleAuthController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GoogleAuthController</servlet-name>
+    <url-pattern>/auth/google/*</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -90,6 +99,15 @@
   <servlet-mapping>
     <servlet-name>ReportController</servlet-name>
     <url-pattern>/reports</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AdminDashboardController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.AdminDashboardController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminDashboardController</servlet-name>
+    <url-pattern>/admin/dashboard</url-pattern>
   </servlet-mapping>
 
   <servlet>

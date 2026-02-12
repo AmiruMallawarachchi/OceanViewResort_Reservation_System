@@ -105,6 +105,18 @@ a {
   background: var(--brand-dark);
 }
 
+.btn--google {
+  background: #fff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  font-weight: 500;
+}
+.btn--google:hover {
+  background: #f8f9fa;
+  border-color: #dadce0;
+  color: #3c4043;
+}
+
 .btn--outline {
   border-color: var(--brand);
   color: var(--brand);
@@ -196,6 +208,7 @@ a {
 .form {
   display: grid;
   gap: 16px;
+  width: 100%;
 }
 
 .form__group {
@@ -219,6 +232,56 @@ input, select, textarea {
 .form__error {
   color: var(--danger);
   font-size: 12px;
+}
+
+.form__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form__row--remember {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-top: -4px;
+  width: 100%;
+  min-width: 0;
+}
+
+.form__row--remember .form__row-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.form__row--remember .form__link {
+  flex: 0 0 auto;
+  margin-left: 16px;
+}
+
+.form__checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.form__checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--brand);
+}
+
+.form__link {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.form__link:hover {
+  text-decoration: underline;
 }
 
 .form__hint {
@@ -332,6 +395,51 @@ input, select, textarea {
 
 .password-requirements li.ok::before {
   background: var(--success);
+}
+
+.password-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input input[type="password"],
+.password-input input[type="text"] {
+  flex: 1;
+  padding-right: 80px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--brand);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: var(--brand-dark);
+}
+
+.password-toggle__icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-eye__slash {
+  opacity: 0;
+}
+
+.password-toggle--visible .icon-eye__slash {
+  opacity: 1;
 }
 
 textarea {

@@ -13,9 +13,47 @@
     <div class="page-header">
       <div>
         <h1 class="page-header__title">Administrator Dashboard</h1>
-        <p class="muted">Manage users, rooms, and reports.</p>
+        <p class="muted">Key performance indicators and management shortcuts.</p>
       </div>
       <span class="badge">Admin Access</span>
+    </div>
+
+    <%
+      com.oceanview.resort.dto.DashboardSummaryDTO summary =
+              (com.oceanview.resort.dto.DashboardSummaryDTO) request.getAttribute("dashboardSummary");
+    %>
+
+    <div class="grid grid--3" style="margin-bottom: 2rem;">
+      <div class="card card--metric">
+        <h3>Occupancy</h3>
+        <p class="metric__value">
+          <%= summary == null ? "-" : String.format("%.1f%%", summary.getOccupancyRate()) %>
+        </p>
+        <p class="metric__hint">
+          <%= summary == null ? "" : (summary.getOccupiedRooms() + " of " + summary.getTotalRooms() + " rooms occupied") %>
+        </p>
+      </div>
+      <div class="card card--metric">
+        <h3>Reservations</h3>
+        <p class="metric__value">
+          <%= summary == null ? "-" : summary.getTotalReservations() %>
+        </p>
+        <p class="metric__hint">
+          <%= summary == null ? "" : ("Cancelled: " + summary.getCancelledReservations()
+                  + " (" + String.format(\"%.1f%%\", summary.getCancellationRate()) + ")") %>
+        </p>
+      </div>
+      <div class="card card--metric">
+        <h3>Revenue (All Time)</h3>
+        <p class="metric__value">
+          <%= summary == null || summary.getTotalRevenue() == null ? "-" : summary.getTotalRevenue() %>
+        </p>
+        <p class="metric__hint">
+          <%= summary == null || summary.getTotalDiscounts() == null
+                  ? ""
+                  : ("Discounts given: " + summary.getTotalDiscounts()) %>
+        </p>
+      </div>
     </div>
 
     <div class="grid grid--3">
