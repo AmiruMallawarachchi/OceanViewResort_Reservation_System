@@ -46,6 +46,7 @@ public final class DatabaseConnection {
             config.setIdleTimeout(getLong(props, "db.pool.idleTimeout", 600000));
             config.setMaxLifetime(getLong(props, "db.pool.maxLifetime", 1800000));
 
+
             DATA_SOURCE = new HikariDataSource(config);
         } catch (IOException | ClassNotFoundException ex) {
             throw new ExceptionInInitializerError("Failed to initialize database connection: " + ex.getMessage());
@@ -61,6 +62,7 @@ public final class DatabaseConnection {
             return Integer.parseInt(val.trim());
         } catch (NumberFormatException e) {
             return defaultValue;
+
         }
     }
 
