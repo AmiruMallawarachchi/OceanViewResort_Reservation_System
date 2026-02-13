@@ -1,29 +1,13 @@
-package com.oceanview.resort.model;
+package com.oceanview.resort.dto;
 
-import java.math.BigDecimal;
-
-public class RoomType {
+public class RoomTypeDTO {
     private long id;
     private String typeName;
     private String description;
-    private BigDecimal ratePerNight;
+    private String ratePerNight;
     private int maxOccupancy;
     private String amenities;
     private boolean active;
-
-    public RoomType() {
-    }
-
-    public RoomType(long id, String typeName, String description, BigDecimal ratePerNight, int maxOccupancy,
-                    String amenities, boolean active) {
-        this.id = id;
-        this.typeName = typeName;
-        this.description = description;
-        this.ratePerNight = ratePerNight;
-        this.maxOccupancy = maxOccupancy;
-        this.amenities = amenities;
-        this.active = active;
-    }
 
     public long getId() {
         return id;
@@ -49,11 +33,11 @@ public class RoomType {
         this.description = description;
     }
 
-    public BigDecimal getRatePerNight() {
+    public String getRatePerNight() {
         return ratePerNight;
     }
 
-    public void setRatePerNight(BigDecimal ratePerNight) {
+    public void setRatePerNight(String ratePerNight) {
         this.ratePerNight = ratePerNight;
     }
 
