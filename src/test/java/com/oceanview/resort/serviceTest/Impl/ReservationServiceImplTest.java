@@ -9,6 +9,7 @@ import com.oceanview.resort.model.enums.ReservationStatus;
 import com.oceanview.resort.repository.GuestRepository;
 import com.oceanview.resort.repository.ReservationRepository;
 import com.oceanview.resort.repository.RoomRepository;
+import com.oceanview.resort.observer.ReservationSubject;
 import com.oceanview.resort.repository.UserRepository;
 import com.oceanview.resort.service.ReservationNotificationService;
 import com.oceanview.resort.service.impl.ReservationServiceImpl;
@@ -61,7 +62,8 @@ public class ReservationServiceImplTest {
                 guestRepository,
                 roomRepository,
                 userRepository,
-                notificationService
+                notificationService,
+                new ReservationSubject()
         );
     }
 

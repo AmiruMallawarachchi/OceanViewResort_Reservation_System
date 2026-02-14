@@ -1,10 +1,10 @@
 package com.oceanview.resort.controllerTest;
 
-import com.oceanview.resort.controller.AdminDashboardController;
+import com.oceanview.resort.controller.ReservationistDashboardController;
 import com.oceanview.resort.dto.DashboardSummaryDTO;
-import com.oceanview.resort.dto.UserDTO;
+import com.oceanview.resort.dto.ReservationDTO;
 import com.oceanview.resort.service.ReportService;
-import com.oceanview.resort.service.UserService;
+import com.oceanview.resort.service.ReservationService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,48 +20,51 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class AdminDashboardControllerTest {
+public class ReservationistDashboardControllerTest {
 
-    private AdminDashboardController controller;
+    private ReservationistDashboardController controller;
     private ReportService reportService;
-    private UserService userService;
+    private ReservationService reservationService;
 
     @Before
     public void setUp() throws Exception {
-        controller = new AdminDashboardController();
+        controller = new ReservationistDashboardController();
         reportService = mock(ReportService.class);
-        userService = mock(UserService.class);
+        reservationService = mock(ReservationService.class);
         injectField("reportService", reportService);
-        injectField("userService", userService);
+        injectField("reservationService", reservationService);
     }
 
     private void injectField(String fieldName, Object value) throws Exception {
-        java.lang.reflect.Field field = AdminDashboardController.class.getDeclaredField(fieldName);
+        java.lang.reflect.Field field = ReservationistDashboardController.class.getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(controller, value);
     }
 
     @Test
-    public void doGet_setsDashboardSummaryAndLatestUsersAndForwards() throws ServletException, IOException {
+    public void doGet_setsGuestsAndArrivalsAndSummaryAndForwards() throws ServletException, IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
+        ReservationDTO r1 = new ReservationDTO();
+        r1.setStatus("CHECKED_IN");
+        r1.setCheckInDate("2026-02-14");
+        r1.setCheckOutDate("2026-02-16");
+        List<ReservationDTO> all = Arrays.asList(r1);
         DashboardSummaryDTO summary = new DashboardSummaryDTO();
-        UserDTO u1 = new UserDTO();
-        u1.setUsername("admin");
-        List<UserDTO> allUsers = Arrays.asList(u1, new UserDTO(), new UserDTO());
+
         when(request.getMethod()).thenReturn("GET");
+        when(reservationService.findAll()).thenReturn(all);
         when(reportService.getDashboardSummary()).thenReturn(summary);
-        when(userService.findAll()).thenReturn(allUsers);
-        when(request.getRequestDispatcher("/admin/dashboard.jsp")).thenReturn(dispatcher);
+        when(request.getRequestDispatcher("/reservationist/dashboard.jsp")).thenReturn(dispatcher);
 
         controller.service(request, response);
 
+        verify(reservationService).findAll();
         verify(reportService).getDashboardSummary();
-        verify(userService).findAll();
         verify(request).setAttribute("dashboardSummary", summary);
-        verify(request).setAttribute(eq("latestUsers"), anyList());
+        verify(request).setAttribute(eq("guestsAndArrivals"), anyList());
         verify(dispatcher).forward(request, response);
     }
 }

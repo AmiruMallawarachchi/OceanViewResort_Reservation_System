@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for KafkaEventProducer.
  */
+@SuppressWarnings("unchecked")
 public class KafkaEventProducerTest {
 
     private Properties testProperties;
