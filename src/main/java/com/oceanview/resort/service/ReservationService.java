@@ -2,6 +2,7 @@ package com.oceanview.resort.service;
 
 import com.oceanview.resort.dto.ReservationDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
@@ -12,4 +13,5 @@ public interface ReservationService {
     ReservationDTO findByReservationNo(String reservationNo);
     List<ReservationDTO> findAll();
     List<ReservationDTO> search(String keyword);
+    List<ReservationDTO> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status);
 }

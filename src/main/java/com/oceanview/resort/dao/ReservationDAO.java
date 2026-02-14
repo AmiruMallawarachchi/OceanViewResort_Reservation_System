@@ -86,7 +86,7 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Reservation findById(long id) {
-        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
+        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.phone, g.address, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
                 "JOIN guests g ON r.guest_id = g.id " +
                 "JOIN rooms rm ON r.room_id = rm.id " +
                 "JOIN room_types rt ON rm.room_type_id = rt.id " +
@@ -107,7 +107,7 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public Reservation findByReservationNo(String reservationNo) {
-        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
+        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.phone, g.address, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
                 "JOIN guests g ON r.guest_id = g.id " +
                 "JOIN rooms rm ON r.room_id = rm.id " +
                 "JOIN room_types rt ON rm.room_type_id = rt.id " +
@@ -128,7 +128,7 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
+        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.phone, g.address, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
                 "JOIN guests g ON r.guest_id = g.id " +
                 "JOIN rooms rm ON r.room_id = rm.id " +
                 "JOIN room_types rt ON rm.room_type_id = rt.id";
@@ -147,11 +147,11 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public List<Reservation> search(String keyword) {
-        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
+        String sql = "SELECT r.*, g.first_name, g.last_name, g.email, g.phone, g.address, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
                 "JOIN guests g ON r.guest_id = g.id " +
                 "JOIN rooms rm ON r.room_id = rm.id " +
                 "JOIN room_types rt ON rm.room_type_id = rt.id " +
-                "WHERE r.reservation_no LIKE ? OR CONCAT(g.first_name, ' ', g.last_name) LIKE ? OR rm.room_number LIKE ? OR r.guest_id = ? OR r.id = ?";
+                "WHERE r.reservation_no LIKE ? OR CONCAT(g.first_name, ' ', g.last_name) LIKE ? OR rm.room_number LIKE ? OR r.guest_id = ? OR r.id = ? OR g.phone LIKE ? OR g.email LIKE ?";
         List<Reservation> reservations = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -167,6 +167,8 @@ public class ReservationDAO implements ReservationRepository {
             long numericValue = numeric == null ? -1 : numeric;
             stmt.setLong(4, numericValue);
             stmt.setLong(5, numericValue);
+            stmt.setString(6, like);
+            stmt.setString(7, like);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     reservations.add(mapRow(rs));
@@ -175,6 +177,75 @@ public class ReservationDAO implements ReservationRepository {
             return reservations;
         } catch (SQLException ex) {
             throw new DatabaseException("Failed to search reservations", ex);
+        }
+    }
+
+    @Override
+    public List<Reservation> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status) {
+        StringBuilder sql = new StringBuilder("SELECT r.*, g.first_name, g.last_name, g.email, g.phone, g.address, g.guest_type, rm.room_number, rt.type_name FROM reservations r " +
+                "JOIN guests g ON r.guest_id = g.id " +
+                "JOIN rooms rm ON r.room_id = rm.id " +
+                "JOIN room_types rt ON rm.room_type_id = rt.id WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        if (keyword != null && !keyword.isBlank()) {
+            String like = "%" + keyword.trim() + "%";
+            sql.append(" AND (r.reservation_no LIKE ? OR CONCAT(g.first_name, ' ', g.last_name) LIKE ? OR rm.room_number LIKE ? OR g.phone LIKE ? OR g.email LIKE ?");
+            Long numeric = null;
+            try {
+                numeric = Long.parseLong(keyword.trim());
+            } catch (NumberFormatException ignored) {
+            }
+            if (numeric != null) {
+                sql.append(" OR r.guest_id = ? OR r.id = ?)");
+                params.add(like);
+                params.add(like);
+                params.add(like);
+                params.add(like);
+                params.add(like);
+                params.add(numeric);
+                params.add(numeric);
+            } else {
+                sql.append(")");
+                params.add(like);
+                params.add(like);
+                params.add(like);
+                params.add(like);
+                params.add(like);
+            }
+        }
+        if (fromDate != null) {
+            sql.append(" AND r.check_in >= ?");
+            params.add(java.sql.Date.valueOf(fromDate));
+        }
+        if (toDate != null) {
+            sql.append(" AND r.check_out <= ?");
+            params.add(java.sql.Date.valueOf(toDate));
+        }
+        if (status != null && !status.isBlank()) {
+            sql.append(" AND r.status = ?");
+            params.add(status.trim());
+        }
+        List<Reservation> reservations = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                Object p = params.get(i);
+                if (p instanceof String) {
+                    stmt.setString(i + 1, (String) p);
+                } else if (p instanceof Long) {
+                    stmt.setLong(i + 1, (Long) p);
+                } else if (p instanceof java.sql.Date) {
+                    stmt.setDate(i + 1, (java.sql.Date) p);
+                }
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    reservations.add(mapRow(rs));
+                }
+            }
+            return reservations;
+        } catch (SQLException ex) {
+            throw new DatabaseException("Failed to find reservations with filters", ex);
         }
     }
 
@@ -207,6 +278,8 @@ public class ReservationDAO implements ReservationRepository {
         guest.setFirstName(rs.getString("first_name"));
         guest.setLastName(rs.getString("last_name"));
         guest.setEmail(rs.getString("email"));
+        guest.setPhone(rs.getString("phone"));
+        guest.setAddress(rs.getString("address"));
         String guestType = rs.getString("guest_type");
         if (guestType != null) {
             guest.setGuestType(com.oceanview.resort.model.enums.GuestType.valueOf(guestType));

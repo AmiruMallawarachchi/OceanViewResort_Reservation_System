@@ -18,6 +18,13 @@ public class DashboardSummaryDTO {
     private BigDecimal totalRevenue;
     private BigDecimal totalDiscounts;
 
+    private long maintenanceRooms;
+    private long todaysCheckins;
+    private long pendingCheckins;
+    private long activeStaff;
+    private long staffOnLeave;
+    private Double occupancyChangePercent;
+
     public long getTotalRooms() {
         return totalRooms;
     }
@@ -88,6 +95,54 @@ public class DashboardSummaryDTO {
 
     public void setTotalDiscounts(BigDecimal totalDiscounts) {
         this.totalDiscounts = totalDiscounts;
+    }
+
+    public long getMaintenanceRooms() {
+        return maintenanceRooms;
+    }
+
+    public void setMaintenanceRooms(long maintenanceRooms) {
+        this.maintenanceRooms = maintenanceRooms;
+    }
+
+    public long getTodaysCheckins() {
+        return todaysCheckins;
+    }
+
+    public void setTodaysCheckins(long todaysCheckins) {
+        this.todaysCheckins = todaysCheckins;
+    }
+
+    public long getPendingCheckins() {
+        return pendingCheckins;
+    }
+
+    public void setPendingCheckins(long pendingCheckins) {
+        this.pendingCheckins = pendingCheckins;
+    }
+
+    public long getActiveStaff() {
+        return activeStaff;
+    }
+
+    public void setActiveStaff(long activeStaff) {
+        this.activeStaff = activeStaff;
+    }
+
+    public long getStaffOnLeave() {
+        return staffOnLeave;
+    }
+
+    public void setStaffOnLeave(long staffOnLeave) {
+        this.staffOnLeave = staffOnLeave;
+    }
+
+    public Double getOccupancyChangePercent() {
+        return occupancyChangePercent;
+    }
+
+    public void setOccupancyChangePercent(Double occupancyChangePercent) {
+        this.occupancyChangePercent = occupancyChangePercent;
     }
 }
 

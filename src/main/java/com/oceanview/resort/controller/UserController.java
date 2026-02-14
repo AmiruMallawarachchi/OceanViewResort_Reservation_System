@@ -1,6 +1,5 @@
 package com.oceanview.resort.controller;
 
-import com.oceanview.resort.dao.UserDAO;
 import com.oceanview.resort.dto.UserDTO;
 import com.oceanview.resort.factory.ServiceFactory;
 import com.oceanview.resort.service.UserService;
@@ -47,6 +46,17 @@ public class UserController extends HttpServlet {
                 long id = Long.parseLong(request.getParameter("id"));
                 userService.deleteUser(id);
                 request.getSession().setAttribute("flashSuccess", "User deleted successfully.");
+            } else if ("sendResetPassword".equalsIgnoreCase(action)) {
+                long id = Long.parseLong(request.getParameter("id"));
+                UserDTO user = userService.findById(id);
+                if (user != null && user.getEmail() != null && !user.getEmail().isBlank()) {
+                    userService.requestPasswordResetOtp(user.getEmail());
+                    request.getSession().setAttribute("flashSuccess", "Password reset email sent to " + user.getEmail() + ".");
+                } else {
+                    request.getSession().setAttribute("flashError", "User has no email; cannot send reset.");
+                }
+                response.sendRedirect(request.getContextPath() + "/users?editId=" + id);
+                return;
             } else if ("update".equalsIgnoreCase(action)) {
                 long id = Long.parseLong(request.getParameter("id"));
                 String fullName = request.getParameter("fullName");
@@ -54,7 +64,7 @@ public class UserController extends HttpServlet {
                 String email = request.getParameter("email");
                 if (isBlank(fullName)) {
                     errors.put("fullName", "Full name is required.");
-                } else if (!isValidFullName(fullName)) {
+                } else if (isValidFullName(fullName)) {
                     errors.put("fullName", "Full name must contain letters and spaces only.");
                 }
                 if (isBlank(username)) {
@@ -94,7 +104,7 @@ public class UserController extends HttpServlet {
                 String email = request.getParameter("email");
                 if (isBlank(fullName)) {
                     errors.put("fullName", "Full name is required.");
-                } else if (!isValidFullName(fullName)) {
+                } else if (isValidFullName(fullName)) {
                     errors.put("fullName", "Full name must contain letters and spaces only.");
                 }
                 if (isBlank(username)) {
@@ -154,7 +164,7 @@ public class UserController extends HttpServlet {
 
     private boolean isValidFullName(String value) {
         String trimmed = value == null ? "" : value.trim();
-        return !trimmed.isEmpty() && trimmed.matches("[A-Za-z ]+");
+        return trimmed.isEmpty() || !trimmed.matches("[A-Za-z ]+");
     }
 
     private List<UserDTO> filterUsers(List<UserDTO> users, String searchQuery, String roleFilter, String statusFilter) {
@@ -197,11 +207,10 @@ public class UserController extends HttpServlet {
         return value != null && value.toLowerCase().contains(query);
     }
 
-    private boolean isStrongPassword(String value) {
-        if (value == null) {
+    private boolean isStrongPassword(String password) {
+        if (password == null) {
             return false;
         }
-        String password = value;
         boolean hasLength = password.length() >= 8;
         boolean hasLower = password.chars().anyMatch(Character::isLowerCase);
         boolean hasUpper = password.chars().anyMatch(Character::isUpperCase);

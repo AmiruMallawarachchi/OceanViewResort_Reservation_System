@@ -7,6 +7,9 @@ import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.model.enums.ReservationStatus;
 import com.oceanview.resort.model.Room;
 import com.oceanview.resort.model.User;
+import com.oceanview.resort.observer.ReservationEvent;
+import com.oceanview.resort.observer.ReservationEventType;
+import com.oceanview.resort.observer.ReservationSubject;
 import com.oceanview.resort.repository.GuestRepository;
 import com.oceanview.resort.repository.ReservationRepository;
 import com.oceanview.resort.repository.RoomRepository;
@@ -21,21 +24,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of ReservationService that uses the Observer Pattern
+ * to notify multiple observers when reservation events occur.
+ */
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final GuestRepository guestRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
-    private final ReservationNotificationService notificationService;
+    private final ReservationNotificationService notificationService; // Kept for backward compatibility
+    private final ReservationSubject reservationSubject; // Observer Pattern subject
 
     public ReservationServiceImpl(ReservationRepository reservationRepository, GuestRepository guestRepository,
                                   RoomRepository roomRepository, UserRepository userRepository,
-                                  ReservationNotificationService notificationService) {
+                                  ReservationNotificationService notificationService,
+                                  ReservationSubject reservationSubject) {
         this.reservationRepository = reservationRepository;
         this.guestRepository = guestRepository;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.reservationSubject = reservationSubject;
     }
 
     @Override
@@ -76,7 +86,15 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setCreatedBy(createdBy);
 
         Reservation created = reservationRepository.create(reservation);
+        
+        // Notify observers using Observer Pattern
+        ReservationEvent createdEvent = new ReservationEvent(ReservationEventType.CREATED, created);
+        createdEvent.setDescription("New reservation created");
+        reservationSubject.notifyObservers(createdEvent);
+        
+        // Maintain backward compatibility with existing notification service
         notificationService.publishConfirmation(created);
+        
         return ReservationMapper.toDTO(created);
     }
 
@@ -88,11 +106,48 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setStatus(ReservationStatus.PENDING);
         }
         Reservation updated = reservationRepository.update(reservation);
-        if (existing != null
-                && existing.getStatus() != ReservationStatus.CANCELLED
-                && reservation.getStatus() == ReservationStatus.CANCELLED) {
-            notificationService.publishCancellation(existing);
+        
+        // Determine event type based on status changes
+        ReservationEventType eventType = ReservationEventType.UPDATED;
+        if (existing != null) {
+            ReservationStatus oldStatus = existing.getStatus();
+            ReservationStatus newStatus = updated.getStatus();
+            
+            if (oldStatus != newStatus) {
+                switch (newStatus) {
+                    case CONFIRMED:
+                        eventType = ReservationEventType.CONFIRMED;
+                        break;
+                    case CANCELLED:
+                        eventType = ReservationEventType.CANCELLED;
+                        break;
+                    case CHECKED_IN:
+                        eventType = ReservationEventType.CHECKED_IN;
+                        break;
+                    case CHECKED_OUT:
+                        eventType = ReservationEventType.CHECKED_OUT;
+                        break;
+                    default:
+                        eventType = ReservationEventType.UPDATED;
+                }
+            }
+            
+            // Notify observers using Observer Pattern
+            ReservationEvent updateEvent = new ReservationEvent(eventType, updated, existing);
+            updateEvent.setDescription("Reservation status changed from " + oldStatus + " to " + newStatus);
+            reservationSubject.notifyObservers(updateEvent);
+            
+            // Maintain backward compatibility for cancellation
+            if (oldStatus != ReservationStatus.CANCELLED && newStatus == ReservationStatus.CANCELLED) {
+                notificationService.publishCancellation(existing);
+            }
+        } else {
+            // No previous state, just notify of update
+            ReservationEvent updateEvent = new ReservationEvent(ReservationEventType.UPDATED, updated);
+            updateEvent.setDescription("Reservation updated");
+            reservationSubject.notifyObservers(updateEvent);
         }
+        
         return ReservationMapper.toDTO(updated);
     }
 
@@ -119,6 +174,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationDTO> search(String keyword) {
         return reservationRepository.search(keyword).stream().map(ReservationMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationDTO> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status) {
+        return reservationRepository.findWithFilters(keyword, fromDate, toDate, status).stream()
+                .map(ReservationMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private String generateReservationNo(long guestId, String roomNumber, LocalDate checkIn) {

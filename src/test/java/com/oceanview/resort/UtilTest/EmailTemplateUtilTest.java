@@ -1,4 +1,4 @@
-package com.oceanview.resort.UtilTest;
+package com.oceanview.resort.utilTest;
 
 import com.oceanview.resort.messaging.ReservationEmailEvent;
 import com.oceanview.resort.util.EmailTemplateUtil;

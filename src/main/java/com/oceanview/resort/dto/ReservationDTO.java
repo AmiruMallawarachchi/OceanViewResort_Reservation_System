@@ -5,6 +5,9 @@ public class ReservationDTO {
     private String reservationNo;
     private long guestId;
     private String guestName;
+    private String guestEmail;
+    private String guestPhone;
+    private String guestAddress;
     private String guestType;
     private long roomId;
     private String roomNumber;
@@ -45,6 +48,30 @@ public class ReservationDTO {
 
     public void setGuestName(String guestName) {
         this.guestName = guestName;
+    }
+
+    public String getGuestEmail() {
+        return guestEmail;
+    }
+
+    public void setGuestEmail(String guestEmail) {
+        this.guestEmail = guestEmail;
+    }
+
+    public String getGuestPhone() {
+        return guestPhone;
+    }
+
+    public void setGuestPhone(String guestPhone) {
+        this.guestPhone = guestPhone;
+    }
+
+    public String getGuestAddress() {
+        return guestAddress;
+    }
+
+    public void setGuestAddress(String guestAddress) {
+        this.guestAddress = guestAddress;
     }
 
     public String getGuestType() {

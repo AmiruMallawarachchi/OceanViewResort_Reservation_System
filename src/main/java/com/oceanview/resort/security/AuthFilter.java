@@ -45,7 +45,8 @@ public class AuthFilter implements Filter {
             "/rooms",
             "/room-types",
             "/reports",
-            "/discounts"
+            "/discounts",
+            "/settings"
     );
 
     private static final Set<String> PUBLIC_PATHS = loadPathSet("auth.public.paths", DEFAULT_PUBLIC_PATHS);

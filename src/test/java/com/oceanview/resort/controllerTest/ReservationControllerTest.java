@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collections;
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -169,12 +170,15 @@ public class ReservationControllerTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
 
+        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(2);
+
         when(request.getMethod()).thenReturn("POST");
         when(request.getParameter("action")).thenReturn(null); // create path
         when(request.getParameter("guestId")).thenReturn("1");
         when(request.getParameter("roomId")).thenReturn("1");
-        when(request.getParameter("checkInDate")).thenReturn("2026-02-12");
-        when(request.getParameter("checkOutDate")).thenReturn("2026-02-13");
+        when(request.getParameter("checkInDate")).thenReturn(checkIn.toString());
+        when(request.getParameter("checkOutDate")).thenReturn(checkOut.toString());
         when(request.getContextPath()).thenReturn(CONTEXT_PATH);
         when(request.getSession(anyBoolean())).thenReturn(session);
         when(request.getSession()).thenReturn(session);

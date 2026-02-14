@@ -28,6 +28,27 @@ public class ReservationController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if ("1".equals(request.getParameter("clearSuccess"))) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.removeAttribute("flashReservationNo");
+                session.removeAttribute("flashReservationId");
+            }
+        }
+        String viewId = request.getParameter("viewId");
+        if (viewId != null) {
+            try {
+                long id = Long.parseLong(viewId);
+                ReservationDTO viewReservation = reservationService.findById(id);
+                if (viewReservation != null) {
+                    request.setAttribute("viewReservation", viewReservation);
+                    request.setAttribute("isPrint", "1".equals(request.getParameter("print")));
+                    request.getRequestDispatcher("/reservationist/reservation-detail.jsp").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
         String editId = request.getParameter("editId");
         if (editId != null) {
             try {
@@ -37,9 +58,20 @@ public class ReservationController extends HttpServlet {
             } catch (NumberFormatException ignored) {
             }
         }
-        String query = request.getParameter("q");
+        String query = trimToNull(request.getParameter("q"));
+        String fromDateStr = trimToNull(request.getParameter("fromDate"));
+        String toDateStr = trimToNull(request.getParameter("toDate"));
+        String statusFilter = trimToNull(request.getParameter("status"));
         List<ReservationDTO> reservations;
-        if (query != null && !query.isBlank()) {
+        if (fromDateStr != null || toDateStr != null || statusFilter != null || (query != null && !query.isBlank())) {
+            LocalDate fromDate = DateUtil.parseDate(fromDateStr);
+            LocalDate toDate = DateUtil.parseDate(toDateStr);
+            reservations = reservationService.findWithFilters(query, fromDate, toDate, statusFilter);
+            request.setAttribute("searchQuery", query);
+            request.setAttribute("filterFromDate", fromDateStr);
+            request.setAttribute("filterToDate", toDateStr);
+            request.setAttribute("filterStatus", statusFilter);
+        } else if (query != null && !query.isBlank()) {
             reservations = reservationService.search(query);
             request.setAttribute("searchQuery", query);
         } else {
@@ -64,8 +96,28 @@ public class ReservationController extends HttpServlet {
                     reservationService.update(existing);
                 }
                 request.getSession().setAttribute("flashSuccess", "Reservation cancelled.");
+            } else if ("checkIn".equalsIgnoreCase(action)) {
+                long id = Long.parseLong(request.getParameter("id"));
+                ReservationDTO existing = reservationService.findById(id);
+                if (existing != null) {
+                    existing.setStatus("CHECKED_IN");
+                    reservationService.update(existing);
+                    request.getSession().setAttribute("flashSuccess", "Guest checked in.");
+                } else {
+                    request.getSession().setAttribute("flashError", "Reservation not found.");
+                }
+            } else if ("checkOut".equalsIgnoreCase(action)) {
+                long id = Long.parseLong(request.getParameter("id"));
+                ReservationDTO existing = reservationService.findById(id);
+                if (existing != null) {
+                    existing.setStatus("CHECKED_OUT");
+                    reservationService.update(existing);
+                    request.getSession().setAttribute("flashSuccess", "Guest checked out.");
+                } else {
+                    request.getSession().setAttribute("flashError", "Reservation not found.");
+                }
             } else if ("update".equalsIgnoreCase(action)) {
-                validateReservationFields(request, errors);
+                validateReservationFields(request, errors, "update");
                 if (!errors.isEmpty()) {
                     request.getSession().setAttribute("fieldErrors", errors);
                     response.sendRedirect(request.getContextPath() + "/reservations?editId=" + request.getParameter("id"));
@@ -81,7 +133,7 @@ public class ReservationController extends HttpServlet {
                 reservationService.update(dto);
                 request.getSession().setAttribute("flashSuccess", "Reservation updated successfully.");
             } else {
-                validateReservationFields(request, errors);
+                validateReservationFields(request, errors, "create");
                 if (!errors.isEmpty()) {
                     request.getSession().setAttribute("fieldErrors", errors);
                     response.sendRedirect(request.getContextPath() + "/reservations");
@@ -95,8 +147,14 @@ public class ReservationController extends HttpServlet {
         dto.setStatus("PENDING");
 
         long createdBy = getCurrentUserId(request.getSession(false));
-        reservationService.create(dto, createdBy);
+        ReservationDTO created = reservationService.create(dto, createdBy);
                 request.getSession().setAttribute("flashSuccess", "Reservation created successfully.");
+                if (created != null) {
+                    if (created.getReservationNo() != null) {
+                        request.getSession().setAttribute("flashReservationNo", created.getReservationNo());
+                    }
+                    request.getSession().setAttribute("flashReservationId", created.getId());
+                }
             }
         } catch (Exception ex) {
             request.getSession().setAttribute("flashError", ex.getMessage());
@@ -126,7 +184,7 @@ public class ReservationController extends HttpServlet {
         }
     }
 
-    private void validateReservationFields(HttpServletRequest request, java.util.Map<String, String> errors) {
+    private void validateReservationFields(HttpServletRequest request, java.util.Map<String, String> errors, String mode) {
         if (isBlank(request.getParameter("guestId"))) {
             errors.put("guestId", "Guest ID is required.");
         }
@@ -138,6 +196,19 @@ public class ReservationController extends HttpServlet {
         }
         if (isBlank(request.getParameter("checkOutDate"))) {
             errors.put("checkOutDate", "Check-out date is required.");
+        }
+        String checkInStr = trimToNull(request.getParameter("checkInDate"));
+        String checkOutStr = trimToNull(request.getParameter("checkOutDate"));
+        if (checkInStr != null && checkOutStr != null) {
+            LocalDate checkIn = DateUtil.parseDate(checkInStr);
+            LocalDate checkOut = DateUtil.parseDate(checkOutStr);
+            if (checkIn != null && checkOut != null) {
+                if (!checkOut.isAfter(checkIn)) {
+                    errors.put("checkOutDate", "Check-out date must be after check-in date.");
+                } else if ("create".equals(mode) && checkIn.isBefore(LocalDate.now())) {
+                    errors.put("checkInDate", "Check-in date cannot be in the past for a new reservation.");
+                }
+            }
         }
     }
 

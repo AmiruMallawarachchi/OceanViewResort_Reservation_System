@@ -22,6 +22,9 @@ public final class ReservationMapper {
         if (reservation.getGuest() != null) {
             dto.setGuestId(reservation.getGuest().getId());
             dto.setGuestName(reservation.getGuest().getFullName());
+            dto.setGuestEmail(reservation.getGuest().getEmail());
+            dto.setGuestPhone(reservation.getGuest().getPhone());
+            dto.setGuestAddress(reservation.getGuest().getAddress());
             dto.setGuestType(reservation.getGuest().getGuestType() == null ? null : reservation.getGuest().getGuestType().name());
         }
         if (reservation.getRoom() != null) {
