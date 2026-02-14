@@ -11,7 +11,7 @@ import java.util.Properties;
 
 /**
  * Provides database connections via a HikariCP connection pool. Uses DataSource
- * internally for production-ready connection management. Configuration is loaded
+ * internally for production ready connection management. Configuration is loaded
  * from db.properties.
  */
 public final class DatabaseConnection {
