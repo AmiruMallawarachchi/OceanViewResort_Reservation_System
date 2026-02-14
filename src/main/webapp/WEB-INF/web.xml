@@ -111,12 +111,30 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>ReservationistDashboardController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.ReservationistDashboardController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReservationistDashboardController</servlet-name>
+    <url-pattern>/reservationist/dashboard</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>DiscountController</servlet-name>
     <servlet-class>com.oceanview.resort.controller.DiscountController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DiscountController</servlet-name>
     <url-pattern>/discounts</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SettingsController</servlet-name>
+    <servlet-class>com.oceanview.resort.controller.SettingsController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SettingsController</servlet-name>
+    <url-pattern>/settings</url-pattern>
   </servlet-mapping>
   
   <welcome-file-list>

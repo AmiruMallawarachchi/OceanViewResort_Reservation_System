@@ -1,3 +1,18 @@
+<%
+  Object userId = session == null ? null : session.getAttribute("userId");
+  String role = session == null ? null : (String) session.getAttribute("role");
+  String username = session == null ? null : (String) session.getAttribute("username");
+  boolean loggedIn = userId != null;
+  boolean isAdmin = loggedIn && role != null && "ADMIN".equalsIgnoreCase(role);
+  boolean isReservationist = loggedIn && role != null && "RESERVATIONIST".equalsIgnoreCase(role);
+  String _ctx = request.getContextPath();
+  String uri = request.getRequestURI() != null ? request.getRequestURI() : "";
+  boolean activeDashboard = uri.contains("dashboard");
+  boolean activeUsers = uri.contains("users");
+  boolean activeRooms = uri.contains("rooms");
+  boolean activeReports = uri.contains("reports");
+  boolean activeHome = uri.endsWith("index.jsp") || uri.endsWith("/") || (isAdmin && uri.contains("admin/dashboard"));
+%>
 <nav class="nav">
   <div class="nav__brand">
     <span class="nav__logo">OV</span>
@@ -7,43 +22,62 @@
     </div>
   </div>
   <div class="nav__links">
-    <a href="<%= request.getContextPath() %>/index.jsp">Home</a>
-    <a href="<%= request.getContextPath() %>/about.jsp">About</a>
-    <a href="<%= request.getContextPath() %>/help.jsp">Help</a>
-    <a href="<%= request.getContextPath() %>/contact.jsp">Contact</a>
-    <%
-      Object userId = session == null ? null : session.getAttribute("userId");
-      String role = session == null ? null : (String) session.getAttribute("role");
-      boolean loggedIn = userId != null;
-      boolean isAdmin = loggedIn && role != null && "ADMIN".equalsIgnoreCase(role);
-      boolean isReservationist = loggedIn && role != null && "RESERVATIONIST".equalsIgnoreCase(role);
-    %>
-    <%
-      if (loggedIn) {
-    %>
-    <%
-      if (isAdmin) {
-    %>
-    <a href="<%= request.getContextPath() %>/admin/dashboard">Admin</a>
+    <% if (loggedIn) {
+      if (isAdmin) { %>
+    <a href="<%= _ctx %>/admin/dashboard" class="<%= activeHome ? "nav__link--active" : "" %>">
+      <svg class="nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="<%= _ctx %>/users" class="<%= activeUsers ? "nav__link--active" : "" %>">
+      <svg class="nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Users
+    </a>
+    <a href="<%= _ctx %>/rooms" class="<%= activeRooms ? "nav__link--active" : "" %>">
+      <svg class="nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l18 0"/><path d="M3 15l18 0"/><path d="M5 9V6a2 2 0 012-2h10a2 2 0 012 2v3"/><path d="M5 15v3a2 2 0 002 2h10a2 2 0 002-2v-3"/></svg>
+      Rooms
+    </a>
+    <a href="<%= _ctx %>/reports" class="<%= activeReports ? "nav__link--active" : "" %>">
+      <svg class="nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Reports
+    </a>
+    <a href="<%= _ctx %>/discounts" class="<%= uri.contains("discounts") ? "nav__link--active" : "" %>">Discounts</a>
+    <a href="<%= _ctx %>/settings" class="<%= uri.contains("settings") ? "nav__link--active" : "" %>">Settings</a>
     <%
       } else if (isReservationist) {
     %>
-    <a href="<%= request.getContextPath() %>/reservationist/dashboard.jsp">Dashboard</a>
-    <a href="<%= request.getContextPath() %>/guests">Guests</a>
-    <a href="<%= request.getContextPath() %>/bills">Billing</a>
+    <a href="<%= _ctx %>/reservationist/dashboard" class="<%= activeDashboard ? "nav__link--active" : "" %>">
+      <svg class="nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="<%= _ctx %>/reservations">Reservations</a>
+    <a href="<%= _ctx %>/bills">Billing</a>
+    <a href="<%= _ctx %>/guests">Guests</a>
     <%
       }
+    } else {
     %>
-    <form method="post" action="<%= request.getContextPath() %>/auth" style="display:inline;">
+    <a href="<%= _ctx %>/index.jsp">Home</a>
+    <a href="<%= _ctx %>/about.jsp">About</a>
+    <a href="<%= _ctx %>/help.jsp">Help</a>
+    <a href="<%= _ctx %>/contact.jsp">Contact</a>
+    <% } %>
+  </div>
+  <div class="nav__meta">
+    <% if (loggedIn) { %>
+    <span class="nav__datetime" data-current-datetime aria-hidden="true"></span>
+    <div class="nav__user">
+      <span><%= username == null || username.isBlank() ? "User" : username %></span>
+      <span class="nav__user-role"><%= role == null ? "" : role %></span>
+    </div>
+    <form method="post" action="<%= _ctx %>/auth" style="display:inline;">
       <input type="hidden" name="action" value="logout" />
-      <button class="btn btn--outline" type="submit">Logout</button>
+      <button class="btn btn--outline btn--sm" type="submit" style="display:inline-flex;align-items:center;gap:6px;">
+        Logout
+        <svg class="nav__logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
     </form>
-    <%
-      } else {
-    %>
-    <a class="btn btn--outline" href="<%= request.getContextPath() %>/login.jsp">Login</a>
-    <%
-      }
-    %>
+    <% } else { %>
+    <a class="btn btn--primary" href="<%= _ctx %>/login.jsp">Login</a>
+    <% } %>
   </div>
 </nav>

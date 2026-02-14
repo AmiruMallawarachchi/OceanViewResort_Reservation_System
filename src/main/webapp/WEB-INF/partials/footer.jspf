@@ -1,23 +1,13 @@
 <footer class="footer">
-  <div class="footer__grid">
-    <div>
-      <h4>OceanView Resort</h4>
-      <p>Beachfront comfort with a modern reservation experience.</p>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <svg class="footer__wave-icon" viewBox="0 0 24 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 6c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M0 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+      <span>OceanView Resort</span>
     </div>
-    <div>
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="<%= request.getContextPath() %>/index.jsp">Home</a></li>
-        <li><a href="<%= request.getContextPath() %>/about.jsp">About</a></li>
-        <li><a href="<%= request.getContextPath() %>/help.jsp">Help</a></li>
-        <li><a href="<%= request.getContextPath() %>/contact.jsp">Contact</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Support</h4>
-      <p>Email: support@oceanviewresort.com</p>
-      <p>Phone: +94 91 123 4567</p>
-    </div>
+    <div class="footer__copy">© 2026 OceanView Resort Reservation System. All rights reserved.</div>
   </div>
-  <div class="footer__bottom">© 2026 OceanView Resort. All rights reserved.</div>
 </footer>
+<script src="<%= request.getContextPath() %>/assets/js/ui.js?v=20260212"></script>

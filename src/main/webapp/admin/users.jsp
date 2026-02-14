@@ -1,38 +1,121 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List,com.oceanview.resort.dto.UserDTO" %>
+<% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Users</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260206" />
+  <title>Users | OceanView Resort</title>
+  <link rel="stylesheet" href="<%= ctx %>/assets/css/style.css?v=20260213" />
 </head>
 <body>
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
   <main class="container">
-    <div class="page-header">
+    <%
+      UserDTO editUser = (UserDTO) request.getAttribute("editUser");
+      boolean isEdit = editUser != null;
+      String searchQuery = request.getParameter("q");
+      String roleFilter = request.getParameter("role");
+      String statusFilter = request.getParameter("status");
+      List<UserDTO> users = (List<UserDTO>) request.getAttribute("users");
+      int userCount = users == null ? 0 : users.size();
+    %>
+
+    <div class="page-header page-header--row">
       <div>
-        <h1 class="page-header__title">User Management</h1>
-        <p class="muted">Create, update, and deactivate system users.</p>
+        <h1 class="page-header__title">Users</h1>
+        <p class="muted"><%= userCount %> team members</p>
       </div>
+      <a class="btn btn--primary" href="<%= ctx %>/users#user-form">Add User</a>
     </div>
 
     <%@ include file="/WEB-INF/partials/flash.jspf" %>
     <%@ include file="/WEB-INF/partials/field-errors.jspf" %>
 
-    <%
-      UserDTO editUser = (UserDTO) request.getAttribute("editUser");
-      boolean isEdit = editUser != null;
-    String searchQuery = request.getParameter("q");
-    String roleFilter = request.getParameter("role");
-    String statusFilter = request.getParameter("status");
-    %>
+    <form class="filters" method="get" action="<%= ctx %>/users" style="margin-bottom: 20px;">
+      <div class="filters__group filters__group--search">
+        <input type="text" name="q" placeholder="Search by name or email..." value="<%= searchQuery == null ? "" : searchQuery %>" />
+      </div>
+      <input type="hidden" name="role" value="<%= roleFilter == null ? "" : roleFilter %>" />
+      <input type="hidden" name="status" value="<%= statusFilter == null ? "" : statusFilter %>" />
+      <button type="submit" class="btn btn--outline btn--sm">Search</button>
+      <div class="role-tabs" style="flex: 1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+        <a href="<%= ctx %>/users?q=<%= searchQuery != null ? java.net.URLEncoder.encode(searchQuery, "UTF-8") : "" %>" class="pill <%= (roleFilter == null || roleFilter.isEmpty()) ? "active" : "" %>" style="padding: 8px 16px; text-decoration: none; border-radius: 10px; background: <%= (roleFilter == null || roleFilter.isEmpty()) ? "var(--brand)" : "var(--card)" %>; color: <%= (roleFilter == null || roleFilter.isEmpty()) ? "#fff" : "var(--text)" %>; border: 1px solid var(--border);">All</a>
+        <a href="<%= ctx %>/users?role=RESERVATIONIST&q=<%= searchQuery != null ? java.net.URLEncoder.encode(searchQuery, "UTF-8") : "" %>" class="pill <%= "RESERVATIONIST".equalsIgnoreCase(roleFilter) ? "active" : "" %>" style="padding: 8px 16px; text-decoration: none; border-radius: 10px; background: <%= "RESERVATIONIST".equalsIgnoreCase(roleFilter) ? "var(--brand)" : "var(--card)" %>; color: <%= "RESERVATIONIST".equalsIgnoreCase(roleFilter) ? "#fff" : "var(--text)" %>; border: 1px solid var(--border);">Reservationist</a>
+        <a href="<%= ctx %>/users?role=ADMIN&q=<%= searchQuery != null ? java.net.URLEncoder.encode(searchQuery, "UTF-8") : "" %>" class="pill <%= "ADMIN".equalsIgnoreCase(roleFilter) ? "active" : "" %>" style="padding: 8px 16px; text-decoration: none; border-radius: 10px; background: <%= "ADMIN".equalsIgnoreCase(roleFilter) ? "var(--brand)" : "var(--card)" %>; color: <%= "ADMIN".equalsIgnoreCase(roleFilter) ? "#fff" : "var(--text)" %>; border: 1px solid var(--border);">Admin</a>
+      </div>
+    </form>
 
-    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
-      <div class="panel">
-        <h2><%= isEdit ? "Edit User" : "Create User" %></h2>
-        <form class="form" method="post" action="<%= request.getContextPath() %>/users">
+    <div class="panel">
+      <table class="table table--striped">
+        <thead>
+          <tr>
+            <th>USER</th>
+            <th>ROLE</th>
+            <th>STATUS</th>
+            <th>LAST LOGIN</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%
+            if (users != null && !users.isEmpty()) {
+              for (UserDTO user : users) {
+                String initials = "";
+                if (user.getFullName() != null && !user.getFullName().isBlank()) {
+                  String[] parts = user.getFullName().trim().split("\\s+");
+                  if (parts.length >= 2) initials = (parts[0].substring(0,1) + parts[parts.length-1].substring(0,1)).toUpperCase();
+                  else if (parts[0].length() >= 1) initials = parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
+                }
+                if (initials.isEmpty() && user.getUsername() != null && user.getUsername().length() >= 1) initials = user.getUsername().substring(0, Math.min(2, user.getUsername().length())).toUpperCase();
+          %>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="user-avatar"><%= initials %></span>
+                <div>
+                  <div class="user-cell__name"><%= user.getFullName() != null ? user.getFullName() : user.getUsername() %></div>
+                  <div class="user-cell__email"><%= user.getEmail() != null ? user.getEmail() : "—" %></div>
+                </div>
+              </div>
+            </td>
+            <td><span class="pill pill--role"><%= user.getRole() != null ? user.getRole() : "—" %></span></td>
+            <td><span class="pill <%= user.isActive() ? "pill--active" : "pill--inactive" %>"><%= user.isActive() ? "Active" : "Inactive" %></span></td>
+            <td>—</td>
+            <td>
+              <div class="table-actions">
+                <a class="btn btn--outline btn--sm" href="<%= ctx %>/users?editId=<%= user.getId() %>">Edit</a>
+                <% if (user.getEmail() != null && !user.getEmail().isBlank()) { %>
+                <form method="post" action="<%= ctx %>/users" onsubmit="return confirm('Send password reset email to this user?');" style="display:inline;">
+                  <input type="hidden" name="action" value="sendResetPassword" />
+                  <input type="hidden" name="id" value="<%= user.getId() %>" />
+                  <button class="btn btn--outline btn--sm" type="submit">Reset password</button>
+                </form>
+                <% } %>
+                <form method="post" action="<%= ctx %>/users" onsubmit="return confirm('Delete this user?');" style="display:inline;">
+                  <input type="hidden" name="action" value="delete" />
+                  <input type="hidden" name="id" value="<%= user.getId() %>" />
+                  <button class="btn btn--outline btn--sm" type="submit">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <%
+              }
+            } else {
+          %>
+          <tr>
+            <td colspan="5">No users found.</td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="user-form" style="margin-top: 24px;">
+      <h2><%= isEdit ? "Edit User" : "Create User" %></h2>
+        <form class="form" method="post" action="<%= ctx %>/users">
           <input type="hidden" name="action" value="<%= isEdit ? "update" : "create" %>" />
           <%
             if (isEdit) {
@@ -171,81 +254,11 @@
           <%
             if (isEdit) {
           %>
-          <a class="btn btn--outline" href="<%= request.getContextPath() %>/users">Cancel</a>
+          <a class="btn btn--outline" href="<%= ctx %>/users">Cancel</a>
           <%
             }
           %>
         </form>
-      </div>
-
-      <div class="panel">
-        <h2>Active Users</h2>
-        <div class="table-filters">
-          <form class="filters" method="get" action="<%= request.getContextPath() %>/users">
-            <div class="filters__group filters__group--search">
-              <input type="text" name="q" placeholder="Search name, username, email" value="<%= searchQuery == null ? "" : searchQuery %>" />
-            </div>
-            <div class="filters__group">
-              <select name="role">
-                <option value="">All Roles</option>
-                <option value="ADMIN" <%= "ADMIN".equalsIgnoreCase(roleFilter) ? "selected" : "" %>>Admin</option>
-                <option value="RESERVATIONIST" <%= "RESERVATIONIST".equalsIgnoreCase(roleFilter) ? "selected" : "" %>>Reservationist</option>
-              </select>
-            </div>
-            <div class="filters__group">
-              <select name="status">
-                <option value="">All Status</option>
-                <option value="ACTIVE" <%= "ACTIVE".equalsIgnoreCase(statusFilter) ? "selected" : "" %>>Active</option>
-                <option value="INACTIVE" <%= "INACTIVE".equalsIgnoreCase(statusFilter) ? "selected" : "" %>>Inactive</option>
-              </select>
-            </div>
-            <button class="btn btn--outline btn--sm" type="submit">Filter</button>
-            <a class="btn btn--outline btn--sm" href="<%= request.getContextPath() %>/users">Clear</a>
-          </form>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%
-              List<UserDTO> users = (List<UserDTO>) request.getAttribute("users");
-              if (users != null && !users.isEmpty()) {
-                for (UserDTO user : users) {
-            %>
-            <tr>
-              <td><%= user.getFullName() %></td>
-              <td><%= user.getRole() %></td>
-              <td><%= user.isActive() ? "Active" : "Inactive" %></td>
-              <td>
-                <div class="table-actions">
-                  <a class="btn btn--outline btn--sm" href="<%= request.getContextPath() %>/users?editId=<%= user.getId() %>">Edit</a>
-                  <form method="post" action="<%= request.getContextPath() %>/users" onsubmit="return confirm('Delete this user?');">
-                    <input type="hidden" name="action" value="delete" />
-                    <input type="hidden" name="id" value="<%= user.getId() %>" />
-                    <button class="btn btn--outline btn--sm" type="submit">Delete</button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-            <%
-                }
-              } else {
-            %>
-            <tr>
-              <td colspan="4">No users found.</td>
-            </tr>
-            <%
-              }
-            %>
-          </tbody>
-        </table>
-      </div>
     </div>
   </main>
   <%@ include file="/WEB-INF/partials/footer.jspf" %>
@@ -267,10 +280,10 @@
         <%
           if (usersForHints != null) {
             for (UserDTO user : usersForHints) {
-              String username = user.getUsername();
-              if (username != null) {
+              String usernameForHint = user.getUsername();
+              if (usernameForHint != null) {
         %>
-        "<%= username.replace("\\\\", "\\\\\\\\").replace("\"", "\\\\\"") %>",
+        "<%= usernameForHint.replace("\\\\", "\\\\\\\\").replace("\"", "\\\\\"") %>",
         <%
               }
             }

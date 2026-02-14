@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.ArrayList,java.util.HashMap,java.util.List,java.util.Map,com.oceanview.resort.dto.BillDTO,com.oceanview.resort.dto.DiscountDTO,com.oceanview.resort.dto.ReservationDTO" %>
+<% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Billing | Reservationist</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260206" />
+  <title>Billing | OceanView Resort</title>
+  <link rel="stylesheet" href="<%= ctx %>/assets/css/style.css?v=20260213" />
 </head>
 <body>
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
@@ -43,7 +44,7 @@
 
     <div class="grid" style="grid-template-columns: minmax(320px, 420px) 1fr; gap: 20px;">
       <div class="panel">
-        <form class="form" method="post" action="<%= request.getContextPath() %>/bills">
+        <form class="form" method="post" action="<%= ctx %>/bills">
           <div class="form__group">
             <label>Reservation ID</label>
             <input type="number" id="reservationIdInput" name="reservationId" placeholder="Reservation ID" class="<%= fieldErrors != null && fieldErrors.get("reservationId") != null ? "input--error" : "" %>" required />
@@ -103,7 +104,7 @@
 
       <div class="panel">
         <h2>Find Reservation</h2>
-        <form class="form" method="get" action="<%= request.getContextPath() %>/bills">
+        <form class="form" method="get" action="<%= ctx %>/bills">
           <div class="form__group">
             <label>Guest / Reservation / Room</label>
             <input type="text" name="q" placeholder="Guest name, guest ID, room number, reservation no" value="<%= request.getAttribute("searchQuery") != null ? request.getAttribute("searchQuery") : "" %>" />
@@ -169,19 +170,48 @@
       BillDTO bill = (BillDTO) session.getAttribute("lastBill");
       if (bill != null) {
     %>
-    <div class="section panel">
+    <div class="section panel" id="latestBillPanel" data-net-amount="<%= bill.getNetAmount() != null ? bill.getNetAmount().replaceAll("[^0-9.]", "") : "0" %>">
       <h2>Latest Bill</h2>
-      <table class="table">
-        <tr><th>Bill No</th><td><%= bill.getBillNo() %></td></tr>
-        <tr><th>Reservation</th><td><%= bill.getReservationNo() %></td></tr>
-        <tr><th>Guest</th><td><%= bill.getGuestName() %></td></tr>
-        <tr><th>Room</th><td><%= bill.getRoomNumber() %></td></tr>
-        <tr><th>Nights</th><td><%= bill.getNumberOfNights() %></td></tr>
-        <tr><th>Total</th><td><%= bill.getTotalAmount() %></td></tr>
-        <tr><th>Discount</th><td><%= bill.getDiscountAmount() %></td></tr>
-        <tr><th>Tax</th><td><%= bill.getTaxAmount() %></td></tr>
-        <tr><th>Net Amount</th><td><%= bill.getNetAmount() %></td></tr>
-      </table>
+      <div class="grid" style="grid-template-columns: minmax(260px, 1.2fr) minmax(220px, 0.8fr); gap: 20px;">
+        <div>
+          <table class="table table--compact">
+            <tr><th>Bill No</th><td><%= bill.getBillNo() %></td></tr>
+            <tr><th>Reservation</th><td><%= bill.getReservationNo() %></td></tr>
+            <tr><th>Guest</th><td><%= bill.getGuestName() %></td></tr>
+            <tr><th>Room</th><td><%= bill.getRoomNumber() %></td></tr>
+            <tr><th>Nights</th><td><%= bill.getNumberOfNights() %></td></tr>
+            <tr><th>Room Rate / Night</th><td><%= bill.getRoomRate() %></td></tr>
+            <tr><th>Room Charges (Total)</th><td><%= bill.getTotalAmount() %></td></tr>
+            <tr><th>Discount</th><td><%= bill.getDiscountAmount() %></td></tr>
+            <tr><th>Tax</th><td><%= bill.getTaxAmount() %></td></tr>
+            <tr><th>Grand Total (Net)</th><td><strong><%= bill.getNetAmount() %></strong></td></tr>
+          </table>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 8px;">Payment</h3>
+          <form class="form" onsubmit="window.print(); return false;">
+            <div class="form__group">
+              <label>Payment Method</label>
+              <select name="paymentMethod">
+                <option value="CASH">Cash</option>
+                <option value="CARD">Card</option>
+                <option value="ONLINE">Online</option>
+              </select>
+            </div>
+            <div class="form__group">
+              <label>Amount Received</label>
+              <input type="number" id="amountReceivedInput" name="amountReceived" step="0.01" min="0" placeholder="0.00" />
+            </div>
+            <div class="form__group">
+              <label>Change to Return</label>
+              <input type="number" id="changeToReturnInput" name="changeToReturn" step="0.01" min="0" placeholder="0.00" readonly />
+            </div>
+            <div class="form__group">
+              <button class="btn btn--primary" type="submit">Print Receipt</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <%
       }
@@ -217,6 +247,23 @@
           }
         });
       });
+
+      var amountReceivedInput = document.getElementById("amountReceivedInput");
+      var changeToReturnInput = document.getElementById("changeToReturnInput");
+      var billPanel = document.getElementById("latestBillPanel");
+      if (amountReceivedInput && changeToReturnInput && billPanel) {
+        function updateChange() {
+          var netStr = billPanel.getAttribute("data-net-amount") || "0";
+          var net = parseFloat(netStr);
+          if (isNaN(net)) net = 0;
+          var received = parseFloat(amountReceivedInput.value);
+          if (isNaN(received) || received < 0) received = 0;
+          var change = Math.max(0, received - net);
+          changeToReturnInput.value = change.toFixed(2);
+        }
+        amountReceivedInput.addEventListener("input", updateChange);
+        amountReceivedInput.addEventListener("change", updateChange);
+      }
     });
   </script>
   <%@ include file="/WEB-INF/partials/footer.jspf" %>

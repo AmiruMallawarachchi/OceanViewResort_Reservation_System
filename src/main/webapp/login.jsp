@@ -1,31 +1,34 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | OceanView Resort</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260210" />
+  <link rel="stylesheet" href="<%= ctx %>/assets/css/style.css?v=20260213" />
 </head>
-<body>
+<body class="body--login">
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
-  <main class="container">
-    <div class="page-header">
-      <div>
-        <h1 class="page-header__title">System Login</h1>
-        <p class="muted">Sign in to access reservation tools.</p>
+  <main style="flex:1; display:flex; flex-direction:column; align-items:center; padding: 24px;">
+    <div class="login-card">
+      <div class="login-card__logo">
+        <svg width="32" height="24" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 12c4-4 8-4 12 0s8 4 12 0 8-4 12 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M0 18c4-4 8-4 12 0s8 4 12 0 8-4 12 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+        </svg>
+        <span class="login-card__logo-text">OceanView</span>
       </div>
-    </div>
+      <h2 class="login-card__title">Sign in to your account</h2>
 
-    <%@ include file="/WEB-INF/partials/flash.jspf" %>
-    <%@ include file="/WEB-INF/partials/field-errors.jspf" %>
+      <%@ include file="/WEB-INF/partials/flash.jspf" %>
+      <%@ include file="/WEB-INF/partials/field-errors.jspf" %>
 
-    <div class="panel" style="max-width: 520px; margin: 0 auto;">
-      <form class="form" method="post" action="<%= request.getContextPath() %>/auth">
+      <form class="form" method="post" action="<%= ctx %>/auth">
         <input type="hidden" name="action" value="login" />
         <div class="form__group">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="Enter username" class="<%= fieldErrors != null && fieldErrors.get("username") != null ? "input--error" : "" %>" required />
+          <label for="loginUsername">Email or Username</label>
+          <input type="text" id="loginUsername" name="username" placeholder="admin@ocean.com" class="<%= fieldErrors != null && fieldErrors.get("username") != null ? "input--error" : "" %>" required />
           <%
             if (fieldErrors != null && fieldErrors.get("username") != null) {
           %>
@@ -35,7 +38,7 @@
           %>
         </div>
         <div class="form__group">
-          <label>Password</label>
+          <label for="loginPassword">Password</label>
           <div class="password-input">
             <input type="password" name="password" id="loginPassword" placeholder="Enter password" class="<%= fieldErrors != null && fieldErrors.get("password") != null ? "input--error" : "" %>" required />
             <button type="button" class="password-toggle" id="toggleLoginPassword" aria-label="Show password" title="Show password">
@@ -55,6 +58,12 @@
           <%
             }
           %>
+          <div class="password-strength password-strength--compact" id="loginPasswordStrength" data-strength="weak" style="margin-top: 8px;">
+            <div class="password-strength__bar">
+              <span class="password-strength__fill" id="loginPasswordStrengthFill"></span>
+            </div>
+            <div class="password-strength__text" id="loginPasswordStrengthText" aria-live="polite">Strength: —</div>
+          </div>
         </div>
         <div class="form__row form__row--remember">
           <div class="form__row-left">
@@ -63,37 +72,22 @@
               <span>Remember me</span>
             </label>
           </div>
-          <a href="<%= request.getContextPath() %>/forgot-password.jsp" class="form__link muted">Forgot password?</a>
+          <a href="<%= ctx %>/forgot-password.jsp" class="form__link">Forgot password?</a>
         </div>
         <button class="btn btn--primary" type="submit">Login</button>
         <% if (Boolean.TRUE.equals(request.getAttribute("googleLoginEnabled"))) { %>
         <div class="form__group" style="margin-top: 16px;">
           <div style="text-align: center; color: var(--muted); margin-bottom: 8px;">— or —</div>
-          <a href="<%= request.getContextPath() %>/auth/google" class="btn btn--google" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-decoration: none;">
+          <a href="<%= ctx %>/auth/google" class="btn btn--google" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-decoration: none;">
             <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 6.168-2.183l-2.908-2.258c-.806.54-1.837.86-3.26.86-2.513 0-4.646-1.697-5.41-4.043H.957v2.331C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.59 10.741c-.18-.54-.282-1.117-.282-1.741 0-.624.102-1.2.282-1.741V5.328H.957C.347 6.652 0 8.283 0 9.998s.348 3.346.957 4.67l2.633-2.006z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 5.328L3.59 7.334C4.354 4.99 6.487 3.293 9 3.293z"/></svg>
             Sign in with Google
           </a>
         </div>
         <% } %>
       </form>
-      <p style="margin-top: 16px; color: var(--muted);">Need help? Visit the <a href="<%= request.getContextPath() %>/help.jsp">Help</a> page.</p>
     </div>
+    <p class="login-demo-hint">Demo: use admin@ocean.com for Admin or any other email for Reservationist.</p>
   </main>
   <%@ include file="/WEB-INF/partials/footer.jspf" %>
-  <script>
-    (function () {
-      var passwordInput = document.getElementById("loginPassword");
-      var passwordToggle = document.getElementById("toggleLoginPassword");
-      if (passwordInput && passwordToggle) {
-        passwordToggle.addEventListener("click", function () {
-          var isPassword = passwordInput.type === "password";
-          passwordInput.type = isPassword ? "text" : "password";
-          passwordToggle.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
-          passwordToggle.setAttribute("title", isPassword ? "Hide password" : "Show password");
-          passwordToggle.classList.toggle("password-toggle--visible", !isPassword);
-        });
-      }
-    })();
-  </script>
 </body>
 </html>

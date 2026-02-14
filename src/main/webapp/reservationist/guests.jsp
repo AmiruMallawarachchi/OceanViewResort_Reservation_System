@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List,com.oceanview.resort.dto.GuestDTO" %>
+<% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guest Management</title>
-  <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/style.css?v=20260206" />
+  <title>Guest Management | OceanView Resort</title>
+  <link rel="stylesheet" href="<%= ctx %>/assets/css/style.css?v=20260213" />
 </head>
 <body>
   <%@ include file="/WEB-INF/partials/nav.jspf" %>
@@ -29,7 +30,7 @@
     <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
       <div class="panel">
         <h2><%= isEdit ? "Edit Guest" : "Register Guest" %></h2>
-        <form class="form" method="post" action="<%= request.getContextPath() %>/guests">
+        <form class="form" method="post" action="<%= ctx %>/guests">
           <input type="hidden" name="action" value="<%= isEdit ? "update" : "create" %>" />
           <%
             if (isEdit) {
@@ -113,7 +114,7 @@
           <%
             if (isEdit) {
           %>
-          <a class="btn btn--outline" href="<%= request.getContextPath() %>/guests">Cancel</a>
+          <a class="btn btn--outline" href="<%= ctx %>/guests">Cancel</a>
           <%
             }
           %>
@@ -122,14 +123,14 @@
 
       <div class="panel">
         <h2>Guests</h2>
-        <table class="table">
+        <table class="table table--striped">
           <thead>
             <tr>
-              <th>Guest ID</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Nationality</th>
-              <th>Actions</th>
+              <th>GUEST ID</th>
+              <th>NAME</th>
+              <th>PHONE</th>
+              <th>NATIONALITY</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -145,8 +146,8 @@
               <td><%= guest.getNationality() == null ? "-" : guest.getNationality() %></td>
               <td>
                 <div class="table-actions">
-                  <a class="btn btn--outline btn--sm" href="<%= request.getContextPath() %>/guests?editId=<%= guest.getId() %>">Edit</a>
-                  <form method="post" action="<%= request.getContextPath() %>/guests" onsubmit="return confirm('Delete this guest?');">
+                  <a class="btn btn--outline btn--sm" href="<%= ctx %>/guests?editId=<%= guest.getId() %>">Edit</a>
+                  <form method="post" action="<%= ctx %>/guests" onsubmit="return confirm('Delete this guest?');" style="display:inline;">
                     <input type="hidden" name="action" value="delete" />
                     <input type="hidden" name="id" value="<%= guest.getId() %>" />
                     <button class="btn btn--outline btn--sm" type="submit">Delete</button>
