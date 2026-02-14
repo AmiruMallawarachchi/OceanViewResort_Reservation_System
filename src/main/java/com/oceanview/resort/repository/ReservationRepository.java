@@ -13,5 +13,6 @@ public interface ReservationRepository {
     Reservation findByReservationNo(String reservationNo);
     List<Reservation> findAll();
     List<Reservation> search(String keyword);
+    List<Reservation> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status);
     boolean isRoomAvailable(long roomId, LocalDate checkIn, LocalDate checkOut);
 }
