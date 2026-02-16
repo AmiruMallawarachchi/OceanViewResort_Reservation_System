@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.ArrayList,java.util.HashMap,java.util.List,java.util.Map,com.oceanview.resort.dto.BillDTO,com.oceanview.resort.dto.DiscountDTO,com.oceanview.resort.dto.ReservationDTO" %>
+<%@ page import="java.util.ArrayList,java.util.HashMap,java.util.List,java.util.Map,com.oceanview.resort.dto.BillDTO,com.oceanview.resort.dto.DiscountDTO,com.oceanview.resort.dto.ReservationDTO,com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +51,7 @@
             <%
               if (fieldErrors != null && fieldErrors.get("reservationId") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("reservationId") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("reservationId")) %></div>
             <%
               }
             %>
@@ -82,7 +82,7 @@
               %>
               <label style="display:flex; align-items:center; gap:6px;">
                 <input type="checkbox" name="discountIds" value="<%= discount.getId() %>" />
-                <span><%= discount.getName() %> (<%= discount.getPercent() %>%)</span>
+                <span><%= HtmlUtil.escape(discount.getName()) %> (<%= HtmlUtil.escape(discount.getPercent()) %>%)</span>
               </label>
               <%
                   }
@@ -107,7 +107,7 @@
         <form class="form" method="get" action="<%= ctx %>/bills">
           <div class="form__group">
             <label>Guest / Reservation / Room</label>
-            <input type="text" name="q" placeholder="Guest name, guest ID, room number, reservation no" value="<%= request.getAttribute("searchQuery") != null ? request.getAttribute("searchQuery") : "" %>" />
+            <input type="text" name="q" placeholder="Guest name, guest ID, room number, reservation no" value="<%= request.getAttribute("searchQuery") != null ? HtmlUtil.escape((String)request.getAttribute("searchQuery")) : "" %>" />
           </div>
           <button class="btn btn--outline" type="submit">Search</button>
         </form>
@@ -134,18 +134,18 @@
                   String guestDiscountValue = guestDiscount == null ? "0" : guestDiscount.getPercent();
             %>
             <tr>
-              <td><%= reservation.getReservationNo() %></td>
-              <td><%= reservation.getGuestName() %></td>
-              <td><%= reservation.getGuestType() == null ? "-" : reservation.getGuestType() %></td>
-              <td><%= guestDiscountValue %>%</td>
-              <td><%= reservation.getRoomNumber() %></td>
+              <td><%= HtmlUtil.escape(reservation.getReservationNo()) %></td>
+              <td><%= HtmlUtil.escape(reservation.getGuestName()) %></td>
+              <td><%= reservation.getGuestType() == null ? "-" : HtmlUtil.escape(reservation.getGuestType()) %></td>
+              <td><%= HtmlUtil.escape(guestDiscountValue) %>%</td>
+              <td><%= HtmlUtil.escape(reservation.getRoomNumber()) %></td>
               <td><%= reservation.getCheckInDate() %></td>
               <td><%= reservation.getCheckOutDate() %></td>
               <td>
                 <button class="btn btn--outline btn--sm" type="button"
                         data-reservation-id="<%= reservation.getId() %>"
-                        data-guest-name="<%= reservation.getGuestName() %>"
-                        data-guest-type="<%= reservation.getGuestType() == null ? "" : reservation.getGuestType() %>"
+                        data-guest-name="<%= HtmlUtil.escape(reservation.getGuestName()) %>"
+                        data-guest-type="<%= reservation.getGuestType() == null ? "" : HtmlUtil.escape(reservation.getGuestType()) %>"
                         data-guest-discount="<%= guestDiscountValue %>">
                   Select
                 </button>
@@ -175,10 +175,10 @@
       <div class="grid" style="grid-template-columns: minmax(260px, 1.2fr) minmax(220px, 0.8fr); gap: 20px;">
         <div>
           <table class="table table--compact">
-            <tr><th>Bill No</th><td><%= bill.getBillNo() %></td></tr>
-            <tr><th>Reservation</th><td><%= bill.getReservationNo() %></td></tr>
-            <tr><th>Guest</th><td><%= bill.getGuestName() %></td></tr>
-            <tr><th>Room</th><td><%= bill.getRoomNumber() %></td></tr>
+            <tr><th>Bill No</th><td><%= HtmlUtil.escape(bill.getBillNo()) %></td></tr>
+            <tr><th>Reservation</th><td><%= HtmlUtil.escape(bill.getReservationNo()) %></td></tr>
+            <tr><th>Guest</th><td><%= HtmlUtil.escape(bill.getGuestName()) %></td></tr>
+            <tr><th>Room</th><td><%= HtmlUtil.escape(bill.getRoomNumber()) %></td></tr>
             <tr><th>Nights</th><td><%= bill.getNumberOfNights() %></td></tr>
             <tr><th>Room Rate / Night</th><td><%= bill.getRoomRate() %></td></tr>
             <tr><th>Room Charges (Total)</th><td><%= bill.getTotalAmount() %></td></tr>

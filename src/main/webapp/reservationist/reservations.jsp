@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List,com.oceanview.resort.dto.ReservationDTO,com.oceanview.resort.dto.RoomDTO,com.oceanview.resort.dto.RoomTypeDTO" %>
+<%@ page import="java.util.List,com.oceanview.resort.dto.ReservationDTO,com.oceanview.resort.dto.RoomDTO,com.oceanview.resort.dto.RoomTypeDTO,com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
@@ -182,7 +182,7 @@
                   if (roomTypes != null) {
                     for (RoomTypeDTO type : roomTypes) {
                 %>
-                <option value="<%= type.getId() %>" <%= String.valueOf(type.getId()).equals(availabilityRoomTypeId) ? "selected" : "" %>><%= type.getTypeName() %></option>
+                <option value="<%= type.getId() %>" <%= String.valueOf(type.getId()).equals(availabilityRoomTypeId) ? "selected" : "" %>><%= HtmlUtil.escape(type.getTypeName()) %></option>
                 <%
                     }
                   }
@@ -191,7 +191,7 @@
             </div>
             <div class="form__group">
               <label>Room Search</label>
-              <input type="text" name="roomQ" placeholder="Room number" value="<%= availabilityRoomQuery == null ? "" : availabilityRoomQuery %>" />
+              <input type="text" name="roomQ" placeholder="Room number" value="<%= availabilityRoomQuery == null ? "" : HtmlUtil.escape(availabilityRoomQuery) %>" />
             </div>
             <button class="btn btn--outline" type="submit">Find Available Rooms</button>
           </form>
@@ -255,7 +255,7 @@
             <div class="filters">
               <div class="filters__group filters__group--search">
                 <label class="muted" style="display:block; font-size: 13px;">Reservation ID / Guest / Room</label>
-                <input type="text" name="q" placeholder="Enter reservation no, guest name, or room" value="<%= request.getAttribute("searchQuery") != null ? request.getAttribute("searchQuery") : "" %>" />
+                <input type="text" name="q" placeholder="Enter reservation no, guest name, or room" value="<%= request.getAttribute("searchQuery") != null ? HtmlUtil.escape((String)request.getAttribute("searchQuery")) : "" %>" />
               </div>
               <div class="filters__group">
                 <label class="muted" style="display:block; font-size: 13px;">From</label>
@@ -307,9 +307,9 @@
                 data-checkin="<%= reservation.getCheckInDate() == null ? "" : reservation.getCheckInDate() %>"
                 data-checkout="<%= reservation.getCheckOutDate() == null ? "" : reservation.getCheckOutDate() %>"
                 data-status="<%= resStatus %>">
-              <td><%= reservation.getReservationNo() %></td>
-              <td><%= reservation.getGuestName() %></td>
-              <td><%= reservation.getRoomNumber() == null ? "-" : reservation.getRoomNumber() %></td>
+              <td><%= HtmlUtil.escape(reservation.getReservationNo()) %></td>
+              <td><%= HtmlUtil.escape(reservation.getGuestName()) %></td>
+              <td><%= reservation.getRoomNumber() == null ? "-" : HtmlUtil.escape(reservation.getRoomNumber()) %></td>
               <td><%= reservation.getCheckInDate() == null ? "-" : reservation.getCheckInDate() %></td>
               <td><%= reservation.getCheckOutDate() == null ? "-" : reservation.getCheckOutDate() %></td>
               <td>

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +33,7 @@
           <%
             if (fieldErrors != null && fieldErrors.get("username") != null) {
           %>
-          <div class="form__error"><%= fieldErrors.get("username") %></div>
+          <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("username")) %></div>
           <%
             }
           %>
@@ -54,7 +55,7 @@
           <%
             if (fieldErrors != null && fieldErrors.get("password") != null) {
           %>
-          <div class="form__error"><%= fieldErrors.get("password") %></div>
+          <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("password")) %></div>
           <%
             }
           %>

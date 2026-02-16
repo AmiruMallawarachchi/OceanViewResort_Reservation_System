@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.oceanview.resort.dto.ReservationDTO" %>
+<%@ page import="com.oceanview.resort.dto.ReservationDTO,com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <%
   ReservationDTO r = (ReservationDTO) request.getAttribute("viewReservation");
@@ -74,19 +74,19 @@
     <div class="panel">
       <h2>Guest</h2>
       <table class="table table--compact">
-        <tr><th>Name</th><td><%= r.getGuestName() == null ? "—" : r.getGuestName() %></td></tr>
-        <tr><th>Contact (phone)</th><td><%= r.getGuestPhone() == null || r.getGuestPhone().isBlank() ? "—" : r.getGuestPhone() %></td></tr>
-        <tr><th>Email</th><td><%= r.getGuestEmail() == null || r.getGuestEmail().isBlank() ? "—" : r.getGuestEmail() %></td></tr>
-        <tr><th>Address</th><td><%= r.getGuestAddress() == null || r.getGuestAddress().isBlank() ? "—" : r.getGuestAddress() %></td></tr>
-        <tr><th>Guest type</th><td><%= r.getGuestType() == null ? "—" : r.getGuestType() %></td></tr>
+        <tr><th>Name</th><td><%= r.getGuestName() == null ? "—" : HtmlUtil.escape(r.getGuestName()) %></td></tr>
+        <tr><th>Contact (phone)</th><td><%= r.getGuestPhone() == null || r.getGuestPhone().isBlank() ? "—" : HtmlUtil.escape(r.getGuestPhone()) %></td></tr>
+        <tr><th>Email</th><td><%= r.getGuestEmail() == null || r.getGuestEmail().isBlank() ? "—" : HtmlUtil.escape(r.getGuestEmail()) %></td></tr>
+        <tr><th>Address</th><td><%= r.getGuestAddress() == null || r.getGuestAddress().isBlank() ? "—" : HtmlUtil.escape(r.getGuestAddress()) %></td></tr>
+        <tr><th>Guest type</th><td><%= r.getGuestType() == null ? "—" : HtmlUtil.escape(r.getGuestType()) %></td></tr>
       </table>
     </div>
 
     <div class="panel">
       <h2>Room</h2>
       <table class="table table--compact">
-        <tr><th>Room number</th><td><%= r.getRoomNumber() == null ? "—" : r.getRoomNumber() %></td></tr>
-        <tr><th>Room type</th><td><%= r.getRoomTypeName() == null ? "—" : r.getRoomTypeName() %></td></tr>
+        <tr><th>Room number</th><td><%= r.getRoomNumber() == null ? "—" : HtmlUtil.escape(r.getRoomNumber()) %></td></tr>
+        <tr><th>Room type</th><td><%= r.getRoomTypeName() == null ? "—" : HtmlUtil.escape(r.getRoomTypeName()) %></td></tr>
       </table>
     </div>
   </main>

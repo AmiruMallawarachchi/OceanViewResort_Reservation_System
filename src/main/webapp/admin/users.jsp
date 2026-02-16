@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List,com.oceanview.resort.dto.UserDTO" %>
+<%@ page import="java.util.List,com.oceanview.resort.dto.UserDTO,com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +35,7 @@
 
     <form class="filters" method="get" action="<%= ctx %>/users" style="margin-bottom: 20px;">
       <div class="filters__group filters__group--search">
-        <input type="text" name="q" placeholder="Search by name or email..." value="<%= searchQuery == null ? "" : searchQuery %>" />
+        <input type="text" name="q" placeholder="Search by name or email..." value="<%= searchQuery == null ? "" : HtmlUtil.escape(searchQuery) %>" />
       </div>
       <input type="hidden" name="role" value="<%= roleFilter == null ? "" : roleFilter %>" />
       <input type="hidden" name="status" value="<%= statusFilter == null ? "" : statusFilter %>" />
@@ -75,8 +75,8 @@
               <div class="user-cell">
                 <span class="user-avatar"><%= initials %></span>
                 <div>
-                  <div class="user-cell__name"><%= user.getFullName() != null ? user.getFullName() : user.getUsername() %></div>
-                  <div class="user-cell__email"><%= user.getEmail() != null ? user.getEmail() : "—" %></div>
+                  <div class="user-cell__name"><%= HtmlUtil.escape(user.getFullName() != null ? user.getFullName() : user.getUsername()) %></div>
+                  <div class="user-cell__email"><%= user.getEmail() != null ? HtmlUtil.escape(user.getEmail()) : "—" %></div>
                 </div>
               </div>
             </td>
@@ -126,22 +126,22 @@
           %>
           <div class="form__group">
             <label>Full Name</label>
-            <input type="text" name="fullName" placeholder="Full name" value="<%= isEdit ? editUser.getFullName() : "" %>" pattern="[A-Za-z ]+" title="Letters and spaces only" class="<%= fieldErrors != null && fieldErrors.get("fullName") != null ? "input--error" : "" %>" required />
+            <input type="text" name="fullName" placeholder="Full name" value="<%= isEdit ? HtmlUtil.escape(editUser.getFullName()) : "" %>" pattern="[A-Za-z ]+" title="Letters and spaces only" class="<%= fieldErrors != null && fieldErrors.get("fullName") != null ? "input--error" : "" %>" required />
             <%
               if (fieldErrors != null && fieldErrors.get("fullName") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("fullName") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("fullName")) %></div>
             <%
               }
             %>
           </div>
           <div class="form__group">
             <label>Username</label>
-            <input type="text" id="<%= isEdit ? "editUsername" : "createUsername" %>" name="username" placeholder="Username" value="<%= isEdit ? editUser.getUsername() : "" %>" class="<%= fieldErrors != null && fieldErrors.get("username") != null ? "input--error" : "" %>" required />
+            <input type="text" id="<%= isEdit ? "editUsername" : "createUsername" %>" name="username" placeholder="Username" value="<%= isEdit ? HtmlUtil.escape(editUser.getUsername()) : "" %>" class="<%= fieldErrors != null && fieldErrors.get("username") != null ? "input--error" : "" %>" required />
             <%
               if (fieldErrors != null && fieldErrors.get("username") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("username") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("username")) %></div>
             <%
               }
             %>
@@ -155,11 +155,11 @@
           </div>
           <div class="form__group">
             <label>Email</label>
-            <input type="email" name="email" placeholder="Email" value="<%= isEdit ? (editUser.getEmail() == null ? "" : editUser.getEmail()) : "" %>" />
+            <input type="email" name="email" placeholder="Email" value="<%= isEdit ? (editUser.getEmail() == null ? "" : HtmlUtil.escape(editUser.getEmail())) : "" %>" />
             <%
               if (fieldErrors != null && fieldErrors.get("email") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("email") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("email")) %></div>
             <%
               }
             %>
@@ -202,7 +202,7 @@
             <%
               if (fieldErrors != null && fieldErrors.get("password") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("password") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("password")) %></div>
             <%
               }
             %>
@@ -232,7 +232,7 @@
             <%
               if (fieldErrors != null && fieldErrors.get("role") != null) {
             %>
-            <div class="form__error"><%= fieldErrors.get("role") %></div>
+            <div class="form__error"><%= HtmlUtil.escape(fieldErrors.get("role")) %></div>
             <%
               }
             %>

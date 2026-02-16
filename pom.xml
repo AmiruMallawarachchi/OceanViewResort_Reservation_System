@@ -15,6 +15,8 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- JaCoCo sets this at runtime; default silences IDE "unresolved property" warning -->
+    <surefireArgLine/>
   </properties>
 
   <dependencies>
@@ -24,6 +26,18 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>4.0.1</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- JSTL for c:out / fn:escapeXml (XSS prevention) -->
+    <dependency>
+      <groupId>javax.servlet.jsp.jstl</groupId>
+      <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>javax.servlet.jsp.jstl</artifactId>
+      <version>1.2.2</version>
     </dependency>
 
     <dependency>
@@ -66,6 +80,27 @@
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
       <version>3.9.1</version>
+      <exclusions>
+        <!-- CVE-2025-66566: org.lz4:lz4-java has info leak; replaced by patched fork -->
+        <exclusion>
+          <groupId>org.lz4</groupId>
+          <artifactId>lz4-java</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Patched lz4-java fork (fixes CVE-2025-66566); drop-in replacement for org.lz4 -->
+    <dependency>
+      <groupId>at.yawk.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <version>1.10.2</version>
+    </dependency>
+
+    <!-- Override transitive commons-lang3 to fix CVE-2025-48924 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
     </dependency>
 
     <!-- JSON for Kafka payloads -->

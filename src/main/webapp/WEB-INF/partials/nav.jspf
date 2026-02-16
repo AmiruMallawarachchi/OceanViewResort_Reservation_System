@@ -1,3 +1,4 @@
+<%@ page import="com.oceanview.resort.util.HtmlUtil" %>
 <%
   Object userId = session == null ? null : session.getAttribute("userId");
   String role = session == null ? null : (String) session.getAttribute("role");
@@ -66,8 +67,8 @@
     <% if (loggedIn) { %>
     <span class="nav__datetime" data-current-datetime aria-hidden="true"></span>
     <div class="nav__user">
-      <span><%= username == null || username.isBlank() ? "User" : username %></span>
-      <span class="nav__user-role"><%= role == null ? "" : role %></span>
+      <span><%= username == null || username.isBlank() ? "User" : HtmlUtil.escape(username) %></span>
+      <span class="nav__user-role"><%= role == null ? "" : HtmlUtil.escape(role) %></span>
     </div>
     <form method="post" action="<%= _ctx %>/auth" style="display:inline;">
       <input type="hidden" name="action" value="logout" />
