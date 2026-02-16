@@ -19,4 +19,6 @@ public interface RoomRepository {
      * should typically guard usage behind a configuration flag.
      */
     List<Room> findAvailableUsingProcedure(LocalDate checkIn, LocalDate checkOut);
+    /** Number of rooms that use the given room type (for delete guard). */
+    int countByRoomTypeId(long roomTypeId);
 }

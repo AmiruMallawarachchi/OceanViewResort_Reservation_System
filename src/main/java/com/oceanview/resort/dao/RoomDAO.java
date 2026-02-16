@@ -206,6 +206,20 @@ public class RoomDAO implements RoomRepository {
         }
     }
 
+    @Override
+    public int countByRoomTypeId(long roomTypeId) {
+        String sql = "SELECT COUNT(*) FROM rooms WHERE room_type_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, roomTypeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        } catch (SQLException ex) {
+            throw new DatabaseException("Failed to count rooms by room type", ex);
+        }
+    }
+
     private Room mapRow(ResultSet rs) throws SQLException {
         Room room = new Room();
         room.setId(rs.getLong("id"));

@@ -53,8 +53,8 @@ public final class ServiceFactory {
 
         userService = new UserServiceImpl(userDAO);
         guestService = new GuestServiceImpl(guestDAO);
-        roomService = new RoomServiceImpl(roomDAO);
-        roomTypeService = new RoomTypeServiceImpl(roomTypeDAO);
+        roomService = new RoomServiceImpl(roomDAO, reservationDAO);
+        roomTypeService = new RoomTypeServiceImpl(roomTypeDAO, roomDAO);
         
         // Set up Observer Pattern for reservation events
         ReservationSubject reservationSubject = new ReservationSubject();

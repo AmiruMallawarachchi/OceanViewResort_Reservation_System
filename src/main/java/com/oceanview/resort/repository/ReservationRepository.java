@@ -15,4 +15,6 @@ public interface ReservationRepository {
     List<Reservation> search(String keyword);
     List<Reservation> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status);
     boolean isRoomAvailable(long roomId, LocalDate checkIn, LocalDate checkOut);
+    /** Number of reservations that reference the given room (for delete guard). */
+    int countByRoomId(long roomId);
 }

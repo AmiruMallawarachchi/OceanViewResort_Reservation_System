@@ -309,4 +309,18 @@ public class ReservationDAO implements ReservationRepository {
         }
         return reservation;
     }
+
+    @Override
+    public int countByRoomId(long roomId) {
+        String sql = "SELECT COUNT(*) FROM reservations WHERE room_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, roomId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        } catch (SQLException ex) {
+            throw new DatabaseException("Failed to count reservations by room", ex);
+        }
+    }
 }
