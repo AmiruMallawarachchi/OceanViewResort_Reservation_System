@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List,com.oceanview.resort.dto.ReservationDTO" %>
+<%@ page import="java.util.List,com.oceanview.resort.dto.ReservationDTO,com.oceanview.resort.util.HtmlUtil" %>
 <% String ctx = request.getContextPath(); %>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,8 +111,8 @@
                 String rStatus = r.getStatus() != null ? r.getStatus() : "";
           %>
           <tr>
-            <td><%= r.getGuestName() != null ? r.getGuestName() : "—" %></td>
-            <td><%= r.getRoomNumber() != null ? r.getRoomNumber() : "—" %></td>
+            <td><%= r.getGuestName() != null ? HtmlUtil.escape(r.getGuestName()) : "—" %></td>
+            <td><%= r.getRoomNumber() != null ? HtmlUtil.escape(r.getRoomNumber()) : "—" %></td>
             <td><span class="pill <%= typeClass %>"><%= type %></span></td>
             <td><%= dateDisplay %></td>
             <td><span class="pill <%= statusClass %>"><%= statusDisplay %></span></td>
