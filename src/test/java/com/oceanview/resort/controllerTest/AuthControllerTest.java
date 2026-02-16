@@ -114,7 +114,27 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void testLoginInvalidCredentials() throws IOException, ServletException {
+    public void testLoginInvalidUsername() throws IOException, ServletException {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("action")).thenReturn("login");
+        when(request.getParameter("username")).thenReturn("wronguser");
+        when(request.getParameter("password")).thenReturn("admin123");
+        when(request.getContextPath()).thenReturn(CONTEXT_PATH);
+        when(request.getSession(anyBoolean())).thenReturn(session);
+        when(request.getSession()).thenReturn(session);
+
+        authController.service(request, response);
+
+        verify(session).setAttribute(eq("flashError"), eq("Invalid username."));
+        verify(response).sendRedirect(CONTEXT_PATH + "/login.jsp");
+    }
+
+    @Test
+    public void testLoginInvalidPassword() throws IOException, ServletException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
@@ -122,14 +142,14 @@ public class AuthControllerTest {
         when(request.getMethod()).thenReturn("POST");
         when(request.getParameter("action")).thenReturn("login");
         when(request.getParameter("username")).thenReturn(TEST_USERNAME);
-        when(request.getParameter("password")).thenReturn("WrongPassword");
+        when(request.getParameter("password")).thenReturn("wrongpass");
         when(request.getContextPath()).thenReturn(CONTEXT_PATH);
         when(request.getSession(anyBoolean())).thenReturn(session);
         when(request.getSession()).thenReturn(session);
 
         authController.service(request, response);
 
-        verify(session).setAttribute(eq("flashError"), eq("Invalid credentials."));
+        verify(session).setAttribute(eq("flashError"), eq("Invalid password."));
         verify(response).sendRedirect(CONTEXT_PATH + "/login.jsp");
     }
 
@@ -151,6 +171,30 @@ public class AuthControllerTest {
 
         verify(session).setAttribute(eq("fieldErrors"), org.mockito.ArgumentMatchers.argThat(errors ->
                 "Username is required.".equals(((java.util.Map<?, ?>) errors).get("username"))));
+        verify(response).sendRedirect(CONTEXT_PATH + "/login.jsp");
+    }
+
+    @Test
+    public void testLoginBothFieldsEmpty() throws IOException, ServletException {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("action")).thenReturn("login");
+        when(request.getParameter("username")).thenReturn("");
+        when(request.getParameter("password")).thenReturn("");
+        when(request.getContextPath()).thenReturn(CONTEXT_PATH);
+        when(request.getSession(anyBoolean())).thenReturn(session);
+        when(request.getSession()).thenReturn(session);
+
+        authController.service(request, response);
+
+        verify(session).setAttribute(eq("fieldErrors"), org.mockito.ArgumentMatchers.argThat(errors -> {
+            java.util.Map<?, ?> map = (java.util.Map<?, ?>) errors;
+            return "Username is required.".equals(map.get("username"))
+                    && "Password is required.".equals(map.get("password"));
+        }));
         verify(response).sendRedirect(CONTEXT_PATH + "/login.jsp");
     }
 

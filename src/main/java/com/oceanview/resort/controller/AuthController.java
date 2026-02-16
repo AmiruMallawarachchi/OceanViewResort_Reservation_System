@@ -56,9 +56,21 @@ public class AuthController extends HttpServlet {
             return;
         }
 
+        UserDTO existingUser = userService.findByUsername(username);
+        if (existingUser == null) {
+            request.getSession().setAttribute("flashError", "Invalid username.");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        if (!existingUser.isActive()) {
+            request.getSession().setAttribute("flashError", "Invalid credentials.");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
         UserDTO user = userService.authenticate(username, password);
         if (user == null) {
-            request.getSession().setAttribute("flashError", "Invalid credentials.");
+            request.getSession().setAttribute("flashError", "Invalid password.");
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
