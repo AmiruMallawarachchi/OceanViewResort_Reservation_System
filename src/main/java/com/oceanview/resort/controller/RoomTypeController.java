@@ -64,11 +64,31 @@ public class RoomTypeController extends HttpServlet {
         if (isBlank(request.getParameter("typeName"))) {
             errors.put("typeName", "Type name is required.");
         }
-        if (isBlank(request.getParameter("ratePerNight"))) {
+        String rateStr = request.getParameter("ratePerNight");
+        if (isBlank(rateStr)) {
             errors.put("ratePerNight", "Rate per night is required.");
+        } else {
+            try {
+                double rate = Double.parseDouble(rateStr.trim());
+                if (rate < 0) {
+                    errors.put("ratePerNight", "Rate per night cannot be negative.");
+                }
+            } catch (NumberFormatException e) {
+                errors.put("ratePerNight", "Rate per night must be a valid number.");
+            }
         }
-        if (isBlank(request.getParameter("maxOccupancy"))) {
+        String maxOccStr = request.getParameter("maxOccupancy");
+        if (isBlank(maxOccStr)) {
             errors.put("maxOccupancy", "Max occupancy is required.");
+        } else {
+            try {
+                int maxOcc = Integer.parseInt(maxOccStr.trim());
+                if (maxOcc <= 0) {
+                    errors.put("maxOccupancy", "Max occupancy must be at least 1.");
+                }
+            } catch (NumberFormatException e) {
+                errors.put("maxOccupancy", "Max occupancy must be a valid number.");
+            }
         }
     }
 
