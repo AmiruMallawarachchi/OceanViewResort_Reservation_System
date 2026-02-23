@@ -142,11 +142,12 @@ public class BillDaoTest {
         room.setFullAccess(false);
         testRoomId = roomDAO.create(room).getId();
 
+        long ts = System.currentTimeMillis();
         User user = new User();
-        user.setUsername("billdao_" + System.currentTimeMillis());
+        user.setUsername("billdao_" + ts);
         user.setPasswordHash(PasswordUtil.hashPassword("Pass123!"));
         user.setFullName("Bill DAO Test User");
-        user.setEmail("billdao@test.com");
+        user.setEmail("billdao_" + ts + "@test.com");
         user.setRole(UserRole.RESERVATIONIST);
         user.setActive(true);
         testUserId = userDAO.create(user).getId();

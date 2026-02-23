@@ -4,12 +4,14 @@ import com.oceanview.resort.dto.UserDTO;
 import com.oceanview.resort.factory.ServiceFactory;
 import com.oceanview.resort.service.UserService;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 
 public class AuthController extends HttpServlet {
     private final UserService userService = ServiceFactory.getInstance().getUserService();
@@ -140,18 +142,7 @@ public class AuthController extends HttpServlet {
         String otp = request.getParameter("otp");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
-        java.util.Map<String, String> errors = new java.util.HashMap<>();
-        if (otp == null || otp.isBlank()) {
-            errors.put("otp", "Reset code is required.");
-        }
-        if (newPassword == null || newPassword.isBlank()) {
-            errors.put("newPassword", "New password is required.");
-        } else if (newPassword.length() < 6) {
-            errors.put("newPassword", "Password must be at least 6 characters.");
-        }
-        if (!java.util.Objects.equals(newPassword, confirmPassword)) {
-            errors.put("confirmPassword", "Passwords do not match.");
-        }
+        Map<String, String> errors = getStringStringMap(otp, newPassword, confirmPassword);
         if (!errors.isEmpty()) {
             request.getSession().setAttribute("fieldErrors", errors);
             request.getSession().setAttribute("resetEmail", email);
@@ -169,5 +160,22 @@ public class AuthController extends HttpServlet {
         }
         request.getSession(true).setAttribute("flashSuccess", "Password updated. You can now sign in.");
         response.sendRedirect(ctx + "/login.jsp");
+    }
+
+    @Nonnull
+    private static Map<String, String> getStringStringMap(String otp, String newPassword, String confirmPassword) {
+        Map<String, String> errors = new java.util.HashMap<>();
+        if (otp == null || otp.isBlank()) {
+            errors.put("otp", "Reset code is required.");
+        }
+        if (newPassword == null || newPassword.isBlank()) {
+            errors.put("newPassword", "New password is required.");
+        } else if (newPassword.length() < 6) {
+            errors.put("newPassword", "Password must be at least 6 characters.");
+        }
+        if (!java.util.Objects.equals(newPassword, confirmPassword)) {
+            errors.put("confirmPassword", "Passwords do not match.");
+        }
+        return errors;
     }
 }

@@ -56,6 +56,19 @@ public class RoomController extends HttpServlet {
                 long id = Long.parseLong(request.getParameter("id"));
                 roomService.delete(id);
                 request.getSession().setAttribute("flashSuccess", "Room deleted successfully.");
+            } else if ("toggleMaintenance".equalsIgnoreCase(action)) {
+                long id = Long.parseLong(request.getParameter("id"));
+                RoomDTO room = roomService.findById(id);
+                if (room == null) {
+                    request.getSession().setAttribute("flashError", "Room not found.");
+                } else {
+                    String currentStatus = room.getStatus() == null ? "AVAILABLE" : room.getStatus();
+                    String nextStatus = "MAINTENANCE".equalsIgnoreCase(currentStatus) ? "AVAILABLE" : "MAINTENANCE";
+                    room.setStatus(nextStatus);
+                    roomService.update(room);
+                    request.getSession().setAttribute("flashSuccess",
+                            "Room status updated to " + nextStatus + ".");
+                }
             } else if ("update".equalsIgnoreCase(action)) {
                 validateRoomFields(request, errors);
                 if (!errors.isEmpty()) {

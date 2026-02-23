@@ -137,9 +137,16 @@ public class BillServiceImpl implements BillService {
         BigDecimal rate = roomType.getRatePerNight();
         BigDecimal total = rate.multiply(BigDecimal.valueOf(nights));
 
-        // Use Strategy Pattern for discount calculation
+        // Use Strategy Pattern for discount calculation.
+        // If the user did not select any discount (no promotions, no manual),
+        // treat this as \"no discount\" and skip automatic guest-type discounts.
         DiscountCalculationContext context = new DiscountCalculationContext(discountIds, manualDiscountPercent);
-        BigDecimal discountPercent = discountCalculationManager.calculateTotalDiscount(reservation, context);
+        boolean hasSelectedPromotions = discountIds != null && !discountIds.isEmpty();
+        boolean hasManualDiscount = manualDiscountPercent != null && manualDiscountPercent.compareTo(BigDecimal.ZERO) > 0;
+        BigDecimal discountPercent = BigDecimal.ZERO;
+        if (hasSelectedPromotions || hasManualDiscount) {
+            discountPercent = discountCalculationManager.calculateTotalDiscount(reservation, context);
+        }
         BigDecimal discount = total.multiply(discountPercent).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
         double taxRate = configService.getTaxRateDecimal();

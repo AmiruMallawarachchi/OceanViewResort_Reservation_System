@@ -65,34 +65,51 @@
             <input type="text" id="guestTypeDisplay" placeholder="-" readonly />
           </div>
           <div class="form__group">
-            <label>Guest Type Discount</label>
-            <input type="text" id="guestTypeDiscountDisplay" placeholder="0%" readonly />
-          </div>
-          <div class="form__group">
             <label>Actual Check-Out (Optional)</label>
             <input type="date" name="actualCheckoutDate" />
           </div>
           <div class="form__group">
-            <label>Promotion Discounts</label>
-            <div class="form__hint">Select one or more active promotions.</div>
-            <div class="table-actions" style="flex-wrap: wrap; gap: 10px;">
+            <label>Discount Type</label>
+            <select id="discountTypeSelect">
+              <option value="">No discount</option>
               <%
+                // Guest-type based discount types (e.g. REGULAR, VIP, CORPORATE)
+                for (String guestTypeKey : guestTypeDiscounts.keySet()) {
+              %>
+              <option value="GUEST_TYPE_<%= HtmlUtil.escape(guestTypeKey) %>">Guest Type - <%= HtmlUtil.escape(guestTypeKey) %></option>
+              <%
+                }
                 if (!promotionDiscounts.isEmpty()) {
-                  for (DiscountDTO discount : promotionDiscounts) {
               %>
-              <label style="display:flex; align-items:center; gap:6px;">
-                <input type="checkbox" name="discountIds" value="<%= discount.getId() %>" />
-                <span><%= HtmlUtil.escape(discount.getName()) %> (<%= HtmlUtil.escape(discount.getPercent()) %>%)</span>
-              </label>
-              <%
-                  }
-                } else {
-              %>
-              <span class="muted">No active promotions.</span>
+              <option value="PROMOTION">Promotion</option>
               <%
                 }
               %>
-            </div>
+            </select>
+          </div>
+          <div class="form__group">
+            <label>Discount</label>
+            <select id="discountSelect" name="discountIds" style="width:100%;">
+              <option value="">No discount</option>
+              <%
+                // Options will be filtered on the client based on selected discount type
+                for (java.util.Map.Entry<String, DiscountDTO> entry : guestTypeDiscounts.entrySet()) {
+                  DiscountDTO discount = entry.getValue();
+              %>
+              <option value="<%= discount.getId() %>" data-type="GUEST_TYPE_<%= HtmlUtil.escape(entry.getKey()) %>">
+                <%= HtmlUtil.escape(discount.getName()) %> (<%= HtmlUtil.escape(discount.getPercent()) %>%)
+              </option>
+              <%
+                }
+                for (DiscountDTO discount : promotionDiscounts) {
+              %>
+              <option value="<%= discount.getId() %>" data-type="PROMOTION">
+                <%= HtmlUtil.escape(discount.getName()) %> (<%= HtmlUtil.escape(discount.getPercent()) %>%)
+              </option>
+              <%
+                }
+              %>
+            </select>
           </div>
           <div class="form__group">
             <label>Manual Discount (%)</label>
@@ -222,14 +239,12 @@
       var reservationInput = document.getElementById("reservationIdInput");
       var guestNameDisplay = document.getElementById("guestNameDisplay");
       var guestTypeDisplay = document.getElementById("guestTypeDisplay");
-      var guestTypeDiscountDisplay = document.getElementById("guestTypeDiscountDisplay");
       var selectButtons = document.querySelectorAll("[data-reservation-id]");
       selectButtons.forEach(function (button) {
         button.addEventListener("click", function () {
           var reservationId = button.getAttribute("data-reservation-id");
           var guestName = button.getAttribute("data-guest-name");
           var guestType = button.getAttribute("data-guest-type");
-          var guestDiscount = button.getAttribute("data-guest-discount");
           if (reservationInput) {
             reservationInput.value = reservationId || "";
           }
@@ -239,14 +254,43 @@
           if (guestTypeDisplay) {
             guestTypeDisplay.value = guestType || "-";
           }
-          if (guestTypeDiscountDisplay) {
-            guestTypeDiscountDisplay.value = (guestDiscount || "0") + "%";
-          }
           if (reservationInput) {
             reservationInput.focus();
           }
         });
       });
+
+      // Discount type -> discount selection linkage
+      var discountTypeSelect = document.getElementById("discountTypeSelect");
+      var discountSelect = document.getElementById("discountSelect");
+      if (discountTypeSelect && discountSelect) {
+        // Cache all discount options (except the first "No discount" placeholder)
+        var allOptions = Array.prototype.slice.call(discountSelect.options);
+        var placeholderOption = allOptions[0];
+        var discountOptions = allOptions.slice(1);
+
+        function updateDiscountOptions() {
+          var selectedType = discountTypeSelect.value;
+          // Clear current options
+          while (discountSelect.options.length > 0) {
+            discountSelect.remove(0);
+          }
+          // Always add placeholder
+          discountSelect.add(placeholderOption.cloneNode(true));
+          if (!selectedType) {
+            return;
+          }
+          discountOptions.forEach(function (opt) {
+            if (opt.getAttribute("data-type") === selectedType) {
+              discountSelect.add(opt.cloneNode(true));
+            }
+          });
+        }
+
+        discountTypeSelect.addEventListener("change", updateDiscountOptions);
+        // Initialize on load (no type selected -> only "No discount")
+        updateDiscountOptions();
+      }
 
       var amountReceivedInput = document.getElementById("amountReceivedInput");
       var changeToReturnInput = document.getElementById("changeToReturnInput");

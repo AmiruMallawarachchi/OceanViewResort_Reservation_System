@@ -74,11 +74,26 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public boolean delete(long id) {
-        String sql = "DELETE FROM reservations WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            return stmt.executeUpdate() > 0;
+        String deleteAuditSql = "DELETE FROM reservation_audit_log WHERE reservation_id = ?";
+        String deleteReservationSql = "DELETE FROM reservations WHERE id = ?";
+        try (Connection conn = dataSource.getConnection()) {
+            // First, try to delete any audit log entries for this reservation.
+            // If the audit table is missing, ignore that specific error so the
+            // reservation row can still be removed.
+            try (PreparedStatement auditStmt = conn.prepareStatement(deleteAuditSql)) {
+                auditStmt.setLong(1, id);
+                auditStmt.executeUpdate();
+            } catch (SQLException ex) {
+                String message = ex.getMessage();
+                if (message == null || !message.toLowerCase().contains("reservation_audit_log")) {
+                    throw ex;
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(deleteReservationSql)) {
+                stmt.setLong(1, id);
+                return stmt.executeUpdate() > 0;
+            }
         } catch (SQLException ex) {
             throw new DatabaseException("Failed to delete reservation", ex);
         }

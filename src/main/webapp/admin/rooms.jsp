@@ -107,6 +107,13 @@
         <div class="room-card__rate"><%= rateDisplay %></div>
         <div class="table-actions" style="margin-top: 12px;">
           <a class="btn btn--outline btn--sm" href="<%= ctx %>/rooms?editId=<%= room.getId() %>">Edit</a>
+          <form method="post" action="<%= ctx %>/rooms" style="display:inline;">
+            <input type="hidden" name="action" value="toggleMaintenance" />
+            <input type="hidden" name="id" value="<%= room.getId() %>" />
+            <button class="btn btn--outline btn--sm" type="submit">
+              <%= "MAINTENANCE".equalsIgnoreCase(status) ? "Set Available" : "Maintenance" %>
+            </button>
+          </form>
           <form method="post" action="<%= ctx %>/rooms" onsubmit="return confirm('Delete this room?');" style="display:inline;">
             <input type="hidden" name="action" value="delete" />
             <input type="hidden" name="id" value="<%= room.getId() %>" />
