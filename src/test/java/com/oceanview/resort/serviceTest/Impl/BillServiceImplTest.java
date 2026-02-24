@@ -110,7 +110,8 @@ public class BillServiceImplTest {
         rt.setRatePerNight(new BigDecimal("100"));
         room.setRoomType(rt);
         when(roomTypeRepository.findById(5L)).thenReturn(rt);
-        when(discountRepository.findActive()).thenReturn(Collections.emptyList());
+        // discountRepository might not be used directly by BillServiceImpl anymore; mark stubbing lenient
+        lenient().when(discountRepository.findActive()).thenReturn(Collections.emptyList());
         User user = new User();
         user.setId(1L);
         when(userRepository.findById(1L)).thenReturn(user);

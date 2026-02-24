@@ -1,4 +1,4 @@
-package com.oceanview.resort.observerTest;
+package com.oceanview.resort.observerTest.impl;
 
 import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;

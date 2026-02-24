@@ -1,4 +1,4 @@
-package com.oceanview.resort.strategyTest;
+package com.oceanview.resort.strategyTest.impl;
 
 import com.oceanview.resort.model.Discount;
 import com.oceanview.resort.model.Guest;

@@ -6,7 +6,6 @@ import com.oceanview.resort.model.Bill;
 import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.model.Room;
-import com.oceanview.resort.model.User;
 import org.junit.Assert;
 import org.junit.Test;
 

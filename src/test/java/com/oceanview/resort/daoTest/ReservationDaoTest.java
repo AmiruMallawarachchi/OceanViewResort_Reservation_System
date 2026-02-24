@@ -36,7 +36,6 @@ public class ReservationDaoTest {
 
     private ReservationDAO reservationDAO;
     private GuestDAO guestDAO;
-    private RoomDAO roomDAO;
     private UserDAO userDAO;
 
     private long testGuestId;
@@ -48,7 +47,7 @@ public class ReservationDaoTest {
     public void setup() {
         reservationDAO = new ReservationDAO();
         guestDAO = new GuestDAO();
-        roomDAO = new RoomDAO();
+        RoomDAO roomDAO = new RoomDAO();
         userDAO = new UserDAO();
 
         createSupportingData();
@@ -113,10 +112,23 @@ public class ReservationDaoTest {
         Reservation reservation = reservationDAO.create(buildTestReservation());
         long id = reservation.getId();
 
+        // If DB audit trigger is enabled, clean audit rows first so FK won't block deletion
+        deleteReservationAuditLogByReservationId(id);
+
         boolean deleted = reservationDAO.delete(id);
 
         Assert.assertTrue(deleted);
         Assert.assertNull(reservationDAO.findById(id));
+    }
+
+    private void deleteReservationAuditLogByReservationId(long reservationId) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM reservation_audit_log WHERE reservation_id = ?")) {
+            stmt.setLong(1, reservationId);
+            stmt.executeUpdate();
+        } catch (SQLException ignored) {
+        }
     }
 
     @Test
@@ -201,12 +213,13 @@ public class ReservationDaoTest {
             throw new RuntimeException("Failed to create supporting data for ReservationDaoTest", ex);
         }
 
-        // Create user
+        // Create user (unique email per test run to avoid duplicates)
+        long ts = System.currentTimeMillis();
         User user = new User();
-        user.setUsername("resdao_test_" + System.currentTimeMillis());
+        user.setUsername("resdao_test_" + ts);
         user.setPasswordHash(PasswordUtil.hashPassword("Pass123!"));
         user.setFullName("Reservation DAO Test User");
-        user.setEmail("resdao_user@test.com");
+        user.setEmail("resdao_user_" + ts + "@test.com");
         user.setRole(UserRole.RESERVATIONIST);
         user.setActive(true);
         testUserId = userDAO.create(user).getId();

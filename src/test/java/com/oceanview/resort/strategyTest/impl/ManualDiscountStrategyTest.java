@@ -1,4 +1,4 @@
-package com.oceanview.resort.strategyTest;
+package com.oceanview.resort.strategyTest.impl;
 
 import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.strategy.DiscountCalculationContext;
@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
