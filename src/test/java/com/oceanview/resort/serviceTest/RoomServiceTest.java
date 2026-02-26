@@ -123,7 +123,7 @@ public class RoomServiceTest {
         r.setRoomNumber("101");
         LocalDate checkIn = LocalDate.of(2026, 2, 15);
         LocalDate checkOut = LocalDate.of(2026, 2, 18);
-        when(repository.findAvailable(eq(checkIn), eq(checkOut))).thenReturn(List.of(r));
+        when(repository.findAvailable(eq(checkIn), eq(checkOut))).thenReturn(Arrays.asList(r));
 
         List<RoomDTO> result = roomService.findAvailable(checkIn, checkOut);
         assertNotNull(result);

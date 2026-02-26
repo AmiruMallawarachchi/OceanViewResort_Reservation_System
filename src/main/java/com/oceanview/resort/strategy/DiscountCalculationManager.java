@@ -10,10 +10,12 @@ import java.util.List;
 
 /**
  * Manager class that coordinates multiple discount calculation strategies.
+ * 
  * This class implements the Strategy Pattern by:
  * - Maintaining a list of discount calculation strategies
  * - Executing each strategy and combining their results
  * - Applying business rules (e.g., maximum 100% discount)
+ * 
  * This follows the Strategy Pattern's Context role, which uses strategies
  * to perform calculations without knowing their specific implementations.
  */
@@ -27,7 +29,15 @@ public class DiscountCalculationManager {
         this.strategies = strategies != null ? strategies : List.of();
         this.discountRepository = discountRepository;
     }
-
+    
+    /**
+     * Calculate the total discount percentage for a reservation by applying
+     * all registered discount strategies.
+     * 
+     * @param reservation The reservation to calculate discount for
+     * @param context Context containing selected promotions and manual discounts
+     * @return Total discount percentage (0-100)
+     */
     public BigDecimal calculateTotalDiscount(Reservation reservation, DiscountCalculationContext context) {
         if (reservation == null) {
             return BigDecimal.ZERO;
@@ -61,7 +71,10 @@ public class DiscountCalculationManager {
         
         return totalDiscount.setScale(2, RoundingMode.HALF_UP);
     }
-
+    
+    /**
+     * Get the number of registered strategies.
+     */
     public int getStrategyCount() {
         return strategies.size();
     }

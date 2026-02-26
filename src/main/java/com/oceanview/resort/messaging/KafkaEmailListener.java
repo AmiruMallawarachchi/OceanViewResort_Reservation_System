@@ -1,7 +1,7 @@
 package com.oceanview.resort.messaging;
 
 import com.oceanview.resort.config.AppConfig;
-import com.oceanview.resort.service.impl.EmailService;
+import com.oceanview.resort.service.EmailService;
 import com.oceanview.resort.config.DatabaseConnection;
 
 import javax.servlet.ServletContextEvent;

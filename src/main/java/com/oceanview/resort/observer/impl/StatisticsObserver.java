@@ -12,8 +12,10 @@ import java.util.logging.Logger;
 /**
  * Observer that tracks reservation statistics.
  * Maintains counters for different types of reservation events.
+ * 
  * This observer demonstrates how the Observer Pattern allows adding new
  * functionality (statistics tracking) without modifying existing code.
+ * 
  * In a production system, this could update a database table or cache
  * with real-time statistics.
  */
@@ -85,7 +87,7 @@ public class StatisticsObserver implements ReservationObserver {
     }
     
     /**
-     * Get the total number of reservations canceled.
+     * Get the total number of reservations cancelled.
      */
     public long getTotalCancelled() {
         return totalCancelled.get();

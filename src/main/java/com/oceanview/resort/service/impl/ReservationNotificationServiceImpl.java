@@ -7,10 +7,9 @@ import com.oceanview.resort.messaging.ReservationEmailEventType;
 import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.model.Room;
+import com.oceanview.resort.service.EmailService;
 import com.oceanview.resort.service.ReservationNotificationService;
 import com.oceanview.resort.util.DateUtil;
-
-import javax.annotation.Nonnull;
 
 /**
  * Default implementation of {@link ReservationNotificationService} that publishes
@@ -50,11 +49,6 @@ public class ReservationNotificationServiceImpl implements ReservationNotificati
     }
 
     private ReservationEmailEvent buildEvent(Reservation reservation, ReservationEmailEventType type) {
-        return getReservationEmailEvent(reservation, type);
-    }
-
-    @Nonnull
-    public static ReservationEmailEvent getReservationEmailEvent(Reservation reservation, ReservationEmailEventType type) {
         ReservationEmailEvent event = new ReservationEmailEvent();
         if (reservation == null) {
             event.setType(type.name());

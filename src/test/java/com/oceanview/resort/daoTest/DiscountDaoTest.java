@@ -44,7 +44,7 @@ public class DiscountDaoTest {
 
     @Test
     public void testCreateAndFindById() {
-        Discount created = discountDAO.create(buildDiscount());
+        Discount created = discountDAO.create(buildDiscount(true));
         Assert.assertNotNull(created);
         Assert.assertTrue(created.getId() > 0);
         createdDiscountId = created.getId();
@@ -60,7 +60,7 @@ public class DiscountDaoTest {
 
     @Test
     public void testUpdateThenDelete() {
-        Discount created = discountDAO.create(buildDiscount());
+        Discount created = discountDAO.create(buildDiscount(true));
         createdDiscountId = created.getId();
 
         created.setPercent(new BigDecimal("12.50"));
@@ -80,7 +80,7 @@ public class DiscountDaoTest {
 
     @Test
     public void testFindActiveIncludesCreatedActiveDiscount() {
-        Discount created = discountDAO.create(buildDiscount());
+        Discount created = discountDAO.create(buildDiscount(true));
         createdDiscountId = created.getId();
 
         List<Discount> active = discountDAO.findActive();
@@ -90,7 +90,7 @@ public class DiscountDaoTest {
 
     @Test
     public void testFindAllContainsCreatedDiscount() {
-        Discount created = discountDAO.create(buildDiscount());
+        Discount created = discountDAO.create(buildDiscount(true));
         createdDiscountId = created.getId();
 
         List<Discount> all = discountDAO.findAll();
@@ -98,14 +98,14 @@ public class DiscountDaoTest {
         Assert.assertTrue(all.stream().anyMatch(d -> createdDiscountId == d.getId()));
     }
 
-    private Discount buildDiscount() {
+    private Discount buildDiscount(boolean active) {
         Discount d = new Discount();
         d.setName(discountName);
         d.setDiscountType(DiscountType.GUEST_TYPE);
         d.setGuestType(GuestType.VIP);
         d.setPercent(new BigDecimal("10.00"));
         d.setDescription("TDD discount");
-        d.setActive(true);
+        d.setActive(active);
         return d;
     }
 

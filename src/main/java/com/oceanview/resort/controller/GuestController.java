@@ -1,5 +1,6 @@
 package com.oceanview.resort.controller;
 
+import com.oceanview.resort.dao.GuestDAO;
 import com.oceanview.resort.dto.GuestDTO;
 import com.oceanview.resort.factory.ServiceFactory;
 import com.oceanview.resort.service.GuestService;

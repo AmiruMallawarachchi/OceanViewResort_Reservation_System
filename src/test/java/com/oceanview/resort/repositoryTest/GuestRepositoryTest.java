@@ -18,6 +18,7 @@ public class GuestRepositoryTest {
     private final GuestRepository repository = new GuestDAO();
     private static final String ID_PREFIX = "REPO_GUEST_" + System.currentTimeMillis();
     private long createdId;
+    private String idNumber;
 
     @After
     public void tearDown() {
@@ -41,7 +42,7 @@ public class GuestRepositoryTest {
         Assert.assertNotNull(created);
         Assert.assertTrue(created.getId() > 0);
         createdId = created.getId();
-        String idNumber = created.getIdNumber();
+        idNumber = created.getIdNumber();
 
         Guest byId = repository.findById(createdId);
         Assert.assertNotNull(byId);

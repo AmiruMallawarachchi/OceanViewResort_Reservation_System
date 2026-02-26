@@ -1,4 +1,4 @@
-package com.oceanview.resort.utilTest;
+package com.oceanview.resort.UtilTest;
 
 import com.oceanview.resort.util.DateUtil;
 import org.junit.Assert;

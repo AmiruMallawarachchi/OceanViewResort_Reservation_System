@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import javax.servlet.ServletContextEvent;
 import java.lang.reflect.Field;
@@ -127,20 +128,20 @@ public class KafkaEmailListenerTest {
 
             listener.contextDestroyed(mockEvent);
 
-            mockedProducer.verify(KafkaEventProducer::close, times(1));
-            mockedDb.verify(DatabaseConnection::shutdown, times(1));
+            mockedProducer.verify(() -> KafkaEventProducer.close(), times(1));
+            mockedDb.verify(() -> DatabaseConnection.shutdown(), times(1));
         }
     }
 
     @Test
-    public void contextDestroyed_withoutConsumer_onlyClosesProducer() {
+    public void contextDestroyed_withoutConsumer_onlyClosesProducer() throws Exception {
         try (MockedStatic<KafkaEventProducer> mockedProducer = mockStatic(KafkaEventProducer.class);
              MockedStatic<DatabaseConnection> mockedDb = mockStatic(DatabaseConnection.class)) {
 
             listener.contextDestroyed(mockEvent);
 
-            mockedProducer.verify(KafkaEventProducer::close, times(1));
-            mockedDb.verify(DatabaseConnection::shutdown, times(1));
+            mockedProducer.verify(() -> KafkaEventProducer.close(), times(1));
+            mockedDb.verify(() -> DatabaseConnection.shutdown(), times(1));
         }
     }
 }

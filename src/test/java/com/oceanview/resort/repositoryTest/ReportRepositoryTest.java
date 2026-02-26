@@ -25,7 +25,7 @@ public class ReportRepositoryTest {
     private final UserDAO userDAO = new UserDAO();
     private long createdReportId;
     private long createdUserId;
-    private final String testUsername = "repo_report_" + System.currentTimeMillis();
+    private String testUsername = "repo_report_" + System.currentTimeMillis();
 
     @Before
     public void setUp() {

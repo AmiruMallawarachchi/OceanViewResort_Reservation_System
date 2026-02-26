@@ -128,6 +128,7 @@ public class ReservationServiceImpl implements ReservationService {
                         eventType = ReservationEventType.CHECKED_OUT;
                         break;
                     default:
+                        eventType = ReservationEventType.UPDATED;
                 }
             }
             
@@ -158,6 +159,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationDTO findById(long id) {
         return ReservationMapper.toDTO(reservationRepository.findById(id));
+    }
+
+    @Override
+    public ReservationDTO findByReservationNo(String reservationNo) {
+        return ReservationMapper.toDTO(reservationRepository.findByReservationNo(reservationNo));
     }
 
     @Override

@@ -47,6 +47,10 @@ public class ReservationEvent {
         return previousReservation;
     }
 
+    public void setPreviousReservation(Reservation previousReservation) {
+        this.previousReservation = previousReservation;
+    }
+
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

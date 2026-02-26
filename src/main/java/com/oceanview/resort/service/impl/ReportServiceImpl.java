@@ -12,6 +12,7 @@ import com.oceanview.resort.model.User;
 import com.oceanview.resort.model.enums.ReservationStatus;
 import com.oceanview.resort.model.Room;
 import com.oceanview.resort.model.enums.RoomStatus;
+import com.oceanview.resort.model.User;
 import com.oceanview.resort.repository.BillRepository;
 import com.oceanview.resort.repository.GuestRepository;
 import com.oceanview.resort.repository.ReportRepository;

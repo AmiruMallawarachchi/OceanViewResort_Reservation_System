@@ -1,5 +1,6 @@
 package com.oceanview.resort.controller;
 
+import com.oceanview.resort.dao.DiscountDAO;
 import com.oceanview.resort.dto.DiscountDTO;
 import com.oceanview.resort.factory.ServiceFactory;
 import com.oceanview.resort.service.DiscountService;

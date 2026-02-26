@@ -30,7 +30,7 @@ public class UserDaoTest {
 
     @After
     public void tearDown() {
-        deleteTestUserByUsername();
+        deleteTestUserByUsername(TEST_USERNAME);
     }
 
     @Test
@@ -166,10 +166,10 @@ public class UserDaoTest {
         return userDAO.create(user);
     }
 
-    private void deleteTestUserByUsername() {
+    private void deleteTestUserByUsername(String username) {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM users WHERE username = ?")) {
-            stmt.setString(1, UserDaoTest.TEST_USERNAME);
+            stmt.setString(1, username);
             stmt.executeUpdate();
         } catch (SQLException ignored) {
         }

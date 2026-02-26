@@ -2,6 +2,7 @@ package com.oceanview.resort.service.impl;
 
 import com.oceanview.resort.dto.UserDTO;
 import com.oceanview.resort.mapper.UserMapper;
+import com.oceanview.resort.service.EmailService;
 import com.oceanview.resort.model.User;
 import com.oceanview.resort.repository.UserRepository;
 import com.oceanview.resort.service.UserService;
@@ -90,18 +91,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void requestPasswordResetOtp(String email) {
+    public boolean requestPasswordResetOtp(String email) {
         if (email == null || email.isBlank()) {
-            return;
+            return false;
         }
         User user = userRepository.findByEmail(email.trim());
         if (user == null || !user.isActive() || user.getEmail() == null || user.getEmail().isBlank()) {
-            return; // Do not reveal whether email exists
+            return true; // Do not reveal whether email exists
         }
         String otp = otpStore.generateAndStore(user.getEmail());
         if (otp != null) {
             emailService.sendPasswordResetOtp(user.getEmail(), otp);
         }
+        return true;
     }
 
     @Override

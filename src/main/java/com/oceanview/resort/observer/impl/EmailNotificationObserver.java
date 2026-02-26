@@ -4,17 +4,19 @@ import com.oceanview.resort.config.AppConfig;
 import com.oceanview.resort.messaging.KafkaEventProducer;
 import com.oceanview.resort.messaging.ReservationEmailEvent;
 import com.oceanview.resort.messaging.ReservationEmailEventType;
+import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
+import com.oceanview.resort.model.Room;
 import com.oceanview.resort.observer.ReservationEvent;
 import com.oceanview.resort.observer.ReservationEventType;
 import com.oceanview.resort.observer.ReservationObserver;
-import com.oceanview.resort.service.impl.EmailService;
-
-import static com.oceanview.resort.service.impl.ReservationNotificationServiceImpl.getReservationEmailEvent;
+import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.util.DateUtil;
 
 /**
  * Observer that sends email notifications when reservation events occur.
  * Handles CONFIRMATION and CANCELLATION events by sending emails to guests.
+ * 
  * This observer maintains backward compatibility with the existing email notification system.
  */
 public class EmailNotificationObserver implements ReservationObserver {
@@ -68,6 +70,26 @@ public class EmailNotificationObserver implements ReservationObserver {
     }
     
     private ReservationEmailEvent buildEmailEvent(Reservation reservation, ReservationEmailEventType type) {
-        return getReservationEmailEvent(reservation, type);
+        ReservationEmailEvent event = new ReservationEmailEvent();
+        if (reservation == null) {
+            event.setType(type.name());
+            return event;
+        }
+        
+        Guest guest = reservation.getGuest();
+        Room room = reservation.getRoom();
+        
+        event.setType(type.name());
+        event.setReservationId(reservation.getId());
+        event.setReservationNo(reservation.getReservationNo());
+        event.setGuestName(guest == null ? null : guest.getFullName());
+        event.setGuestEmail(guest == null ? null : guest.getEmail());
+        event.setRoomNumber(room == null ? null : room.getRoomNumber());
+        event.setRoomTypeName(room == null || room.getRoomType() == null ? null : room.getRoomType().getTypeName());
+        event.setCheckInDate(DateUtil.formatDate(reservation.getCheckInDate()));
+        event.setCheckOutDate(DateUtil.formatDate(reservation.getCheckOutDate()));
+        event.setStatus(reservation.getStatus() == null ? null : reservation.getStatus().name());
+        
+        return event;
     }
 }

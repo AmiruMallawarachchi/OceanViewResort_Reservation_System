@@ -3,18 +3,14 @@ package com.oceanview.resort.util;
 import com.oceanview.resort.messaging.ReservationEmailEvent;
 
 public final class EmailTemplateUtil {
-    private static ReservationEmailEvent event;
-
     private EmailTemplateUtil() {
     }
 
     public static String buildConfirmationSubject(ReservationEmailEvent event) {
-        EmailTemplateUtil.event = event;
         return "OceanView Resort - Reservation Confirmation";
     }
 
     public static String buildCancellationSubject(ReservationEmailEvent event) {
-        EmailTemplateUtil.event = event;
         return "OceanView Resort - Reservation Cancelled";
     }
 
@@ -51,13 +47,5 @@ public final class EmailTemplateUtil {
 
     private static String blankFallback(String value, String fallback) {
         return value == null || value.isBlank() ? fallback : value;
-    }
-
-    public static ReservationEmailEvent getEvent() {
-        return event;
-    }
-
-    public static void setEvent(ReservationEmailEvent event) {
-        EmailTemplateUtil.event = event;
     }
 }

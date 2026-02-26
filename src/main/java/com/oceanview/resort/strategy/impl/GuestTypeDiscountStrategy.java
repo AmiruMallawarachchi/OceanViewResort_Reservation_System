@@ -12,6 +12,13 @@ import java.util.List;
 
 /**
  * Strategy for calculating discounts based on guest type (REGULAR, VIP, CORPORATE).
+ * 
+ * This strategy:
+ * - Finds all active GUEST_TYPE discounts
+ * - Matches the guest's type with applicable discounts
+ * - Returns the maximum discount percentage (if multiple discounts match)
+ * 
+ * Example: VIP guests get 15% discount, Corporate guests get 10% discount.
  */
 public class GuestTypeDiscountStrategy implements DiscountCalculationStrategy {
     
@@ -28,15 +35,16 @@ public class GuestTypeDiscountStrategy implements DiscountCalculationStrategy {
         }
         
         // Find the maximum discount percentage for this guest type
-
-        return activeDiscounts.stream()
+        BigDecimal maxDiscount = activeDiscounts.stream()
                 .filter(discount -> discount.getDiscountType() == DiscountType.GUEST_TYPE)
-                .filter(Discount::isActive)
+                .filter(discount -> discount.isActive())
                 .filter(discount -> guestType.equals(discount.getGuestType()))
                 .map(Discount::getPercent)
                 .filter(percent -> percent != null && percent.compareTo(BigDecimal.ZERO) > 0)
                 .max(BigDecimal::compareTo)
                 .orElse(BigDecimal.ZERO);
+        
+        return maxDiscount;
     }
     
     @Override

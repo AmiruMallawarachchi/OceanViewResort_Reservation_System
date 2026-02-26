@@ -13,6 +13,15 @@ public interface UserService {
     UserDTO findByUsername(String username);
     UserDTO findByEmail(String email);
     List<UserDTO> findAll();
-    void requestPasswordResetOtp(String email);
+
+    /**
+     * Sends a password-reset OTP to the user's email if the account exists and has an email.
+     * Always returns true (no email enumeration) when email is non-blank.
+     */
+    boolean requestPasswordResetOtp(String email);
+
+    /**
+     * Resets password using the OTP sent to the given email. Returns true if OTP was valid and password updated.
+     */
     boolean resetPasswordWithOtp(String email, String otp, String newPassword);
 }

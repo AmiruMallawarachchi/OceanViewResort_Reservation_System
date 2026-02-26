@@ -45,6 +45,6 @@ public class ReservationRepositoryTest {
         // For non-existent room, behavior may vary - just verify it doesn't throw
         boolean available = repository.isRoomAvailable(999999L, LocalDate.now(), LocalDate.now().plusDays(1));
         // Result depends on implementation - could be false (room doesn't exist) or true (no conflicts)
-        // Just verify it returns a boolean
+        Assert.assertNotNull(Boolean.valueOf(available)); // Just verify it returns a boolean
     }
 }

@@ -1,7 +1,9 @@
 package com.oceanview.resort.strategyTest;
 
+import com.oceanview.resort.model.Discount;
 import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
+import com.oceanview.resort.model.enums.GuestType;
 import com.oceanview.resort.repository.DiscountRepository;
 import com.oceanview.resort.strategy.DiscountCalculationContext;
 import com.oceanview.resort.strategy.DiscountCalculationManager;

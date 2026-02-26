@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -171,12 +172,16 @@ public class ReservationController extends HttpServlet {
         if (checkIn == null && checkOut == null && roomTypeId == null && roomQ == null) {
             return "";
         }
-        StringBuilder qs = new StringBuilder("?");
-        if (checkIn != null) qs.append("availCheckIn=").append(URLEncoder.encode(checkIn, StandardCharsets.UTF_8)).append("&");
-        if (checkOut != null) qs.append("availCheckOut=").append(URLEncoder.encode(checkOut, StandardCharsets.UTF_8)).append("&");
-        if (roomTypeId != null) qs.append("roomTypeId=").append(URLEncoder.encode(roomTypeId, StandardCharsets.UTF_8)).append("&");
-        if (roomQ != null) qs.append("roomQ=").append(URLEncoder.encode(roomQ, StandardCharsets.UTF_8)).append("&");
-        return qs.substring(0, qs.length() - 1);
+        try {
+            StringBuilder qs = new StringBuilder("?");
+            if (checkIn != null) qs.append("availCheckIn=").append(URLEncoder.encode(checkIn, StandardCharsets.UTF_8.name())).append("&");
+            if (checkOut != null) qs.append("availCheckOut=").append(URLEncoder.encode(checkOut, StandardCharsets.UTF_8.name())).append("&");
+            if (roomTypeId != null) qs.append("roomTypeId=").append(URLEncoder.encode(roomTypeId, StandardCharsets.UTF_8.name())).append("&");
+            if (roomQ != null) qs.append("roomQ=").append(URLEncoder.encode(roomQ, StandardCharsets.UTF_8.name())).append("&");
+            return qs.substring(0, qs.length() - 1);
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 
     private void validateReservationFields(HttpServletRequest request, java.util.Map<String, String> errors, String mode) {

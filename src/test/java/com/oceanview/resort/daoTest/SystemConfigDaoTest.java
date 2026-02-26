@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class SystemConfigDaoTest {
 
     @Test
-    public void get_nullOrBlankKey_returnsNullAndDoesNotHitDatabase() {
+    public void get_nullOrBlankKey_returnsNullAndDoesNotHitDatabase() throws Exception {
         DataSource dataSource = mock(DataSource.class);
         SystemConfigDAO dao = new SystemConfigDAO(dataSource);
 
@@ -77,7 +77,7 @@ public class SystemConfigDaoTest {
     }
 
     @Test
-    public void set_nullOrBlankKey_noDatabaseCall() {
+    public void set_nullOrBlankKey_noDatabaseCall() throws Exception {
         DataSource dataSource = mock(DataSource.class);
         SystemConfigDAO dao = new SystemConfigDAO(dataSource);
 
