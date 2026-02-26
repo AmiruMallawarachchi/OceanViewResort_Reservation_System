@@ -1,8 +1,6 @@
 package com.oceanview.resort.observerTest;
 
-import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
-import com.oceanview.resort.model.Room;
 import com.oceanview.resort.observer.ReservationEvent;
 import com.oceanview.resort.observer.ReservationEventType;
 import org.junit.Test;

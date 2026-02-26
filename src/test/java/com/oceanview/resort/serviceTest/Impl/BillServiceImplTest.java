@@ -2,7 +2,6 @@ package com.oceanview.resort.serviceTest.Impl;
 
 import com.oceanview.resort.dto.BillDTO;
 import com.oceanview.resort.model.*;
-import com.oceanview.resort.model.enums.ReservationStatus;
 import com.oceanview.resort.repository.*;
 import com.oceanview.resort.service.impl.BillServiceImpl;
 import org.junit.Before;
@@ -18,7 +17,6 @@ import java.util.Collections;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

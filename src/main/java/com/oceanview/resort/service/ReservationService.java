@@ -10,7 +10,6 @@ public interface ReservationService {
     ReservationDTO update(ReservationDTO dto);
     boolean delete(long id);
     ReservationDTO findById(long id);
-    ReservationDTO findByReservationNo(String reservationNo);
     List<ReservationDTO> findAll();
     List<ReservationDTO> search(String keyword);
     List<ReservationDTO> findWithFilters(String keyword, LocalDate fromDate, LocalDate toDate, String status);

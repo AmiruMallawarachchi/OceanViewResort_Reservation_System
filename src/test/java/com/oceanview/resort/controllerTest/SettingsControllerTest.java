@@ -23,11 +23,11 @@ public class SettingsControllerTest {
     public void setUp() throws Exception {
         controller = new SettingsController();
         configService = mock(ConfigService.class);
-        injectField("configService", configService);
+        injectField(configService);
     }
 
-    private void injectField(String fieldName, Object value) throws Exception {
-        java.lang.reflect.Field field = SettingsController.class.getDeclaredField(fieldName);
+    private void injectField(Object value) throws Exception {
+        java.lang.reflect.Field field = SettingsController.class.getDeclaredField("configService");
         field.setAccessible(true);
         field.set(controller, value);
     }

@@ -3,7 +3,6 @@ package com.oceanview.resort.observer;
 /**
  * Observer interface for reservation events.
  * Classes implementing this interface will be notified when reservation events occur.
- * 
  * This follows the Observer Pattern: observers register with a subject and receive
  * notifications when the subject's state changes.
  */

@@ -1,7 +1,6 @@
 package com.oceanview.resort.securityTest;
 
 import com.oceanview.resort.security.ValidationUtil;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**

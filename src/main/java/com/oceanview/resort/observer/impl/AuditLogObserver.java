@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 /**
  * Observer that logs reservation events for audit purposes.
  * Records all reservation state changes to the application log.
- * 
  * This provides an audit trail of all reservation activities for compliance
  * and debugging purposes.
  */

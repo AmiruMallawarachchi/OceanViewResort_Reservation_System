@@ -8,13 +8,6 @@ public final class HtmlUtil {
     private HtmlUtil() {
     }
 
-    /**
-     * Escapes HTML special characters so the string can be safely embedded in HTML text or attributes.
-     * Prevents XSS when displaying user input (e.g. guest name, search query).
-     *
-     * @param value the string to escape; may be null
-     * @return escaped string, or empty string if null
-     */
     public static String escape(String value) {
         if (value == null) {
             return "";

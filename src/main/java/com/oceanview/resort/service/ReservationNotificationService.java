@@ -9,13 +9,7 @@ import com.oceanview.resort.model.Reservation;
  */
 public interface ReservationNotificationService {
 
-    /**
-     * Publish a confirmation notification for a newly created reservation.
-     */
     void publishConfirmation(Reservation reservation);
 
-    /**
-     * Publish a cancellation notification when a reservation is cancelled.
-     */
     void publishCancellation(Reservation reservation);
 }

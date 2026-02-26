@@ -40,12 +40,15 @@
       <version>1.2.2</version>
     </dependency>
 
+    <!-- Junit for Unit testing 4.13.2 -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Mockito for testing in database testings-->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-inline</artifactId>
