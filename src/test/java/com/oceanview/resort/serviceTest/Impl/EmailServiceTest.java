@@ -1,9 +1,9 @@
-package com.oceanview.resort.serviceTest;
+package com.oceanview.resort.serviceTest.Impl;
 
 import com.oceanview.resort.config.AppConfig;
 import com.oceanview.resort.messaging.ReservationEmailEvent;
 import com.oceanview.resort.messaging.ReservationEmailEventType;
-import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.service.impl.EmailService;
 import com.oceanview.resort.util.EmailTemplateUtil;
 import org.junit.Test;
 import org.mockito.MockedStatic;

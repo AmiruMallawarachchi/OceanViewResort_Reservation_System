@@ -5,7 +5,7 @@ import com.oceanview.resort.model.Guest;
 import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.model.Room;
 import com.oceanview.resort.model.RoomType;
-import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.service.impl.EmailService;
 import com.oceanview.resort.service.impl.ReservationNotificationServiceImpl;
 import org.junit.Before;
 import org.junit.Test;

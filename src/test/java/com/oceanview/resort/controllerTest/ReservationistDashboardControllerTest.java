@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyList;
@@ -51,7 +50,7 @@ public class ReservationistDashboardControllerTest {
         r1.setStatus("CHECKED_IN");
         r1.setCheckInDate("2026-02-14");
         r1.setCheckOutDate("2026-02-16");
-        List<ReservationDTO> all = Arrays.asList(r1);
+        List<ReservationDTO> all = List.of(r1);
         DashboardSummaryDTO summary = new DashboardSummaryDTO();
 
         when(request.getMethod()).thenReturn("GET");

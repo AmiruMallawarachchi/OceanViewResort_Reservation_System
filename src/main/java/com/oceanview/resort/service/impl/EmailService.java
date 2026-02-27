@@ -1,4 +1,4 @@
-package com.oceanview.resort.service;
+package com.oceanview.resort.service.impl;
 
 import com.oceanview.resort.config.AppConfig;
 import com.oceanview.resort.messaging.ReservationEmailEvent;

@@ -1,7 +1,7 @@
 package com.oceanview.resort.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.service.impl.EmailService;
 import com.oceanview.resort.config.AppConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

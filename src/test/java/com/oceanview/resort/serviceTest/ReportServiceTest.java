@@ -12,15 +12,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +73,7 @@ public class ReportServiceTest {
     public void testFindAll() {
         Report r1 = new Report();
         r1.setId(1L);
-        when(reportRepository.findAll()).thenReturn(Arrays.asList(r1));
+        when(reportRepository.findAll()).thenReturn(List.of(r1));
 
         List<ReportDTO> result = reportService.findAll();
         assertNotNull(result);

@@ -6,7 +6,7 @@ import com.oceanview.resort.model.Room;
 import com.oceanview.resort.observer.ReservationEvent;
 import com.oceanview.resort.observer.ReservationEventType;
 import com.oceanview.resort.observer.impl.EmailNotificationObserver;
-import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.service.impl.EmailService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

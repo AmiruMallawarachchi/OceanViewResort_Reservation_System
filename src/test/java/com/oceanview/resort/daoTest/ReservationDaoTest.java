@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Integration tests for ReservationDAO: create, findById, findByReservationNo,
  * findAll, search, delete, and isRoomAvailable.
- *
+ * <p>
  * These tests hit the real database configured in db.properties,
  * similar to {@link UserDaoTest}.
  */
@@ -47,7 +47,7 @@ public class ReservationDaoTest {
     public void setup() {
         reservationDAO = new ReservationDAO();
         guestDAO = new GuestDAO();
-        RoomDAO roomDAO = new RoomDAO();
+        new RoomDAO();
         userDAO = new UserDAO();
 
         createSupportingData();

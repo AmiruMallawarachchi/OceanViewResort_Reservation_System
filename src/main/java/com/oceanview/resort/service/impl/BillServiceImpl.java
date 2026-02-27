@@ -3,9 +3,6 @@ package com.oceanview.resort.service.impl;
 import com.oceanview.resort.dto.BillDTO;
 import com.oceanview.resort.mapper.BillMapper;
 import com.oceanview.resort.model.Bill;
-import com.oceanview.resort.model.Discount;
-import com.oceanview.resort.model.enums.DiscountType;
-import com.oceanview.resort.model.enums.GuestType;
 import com.oceanview.resort.model.Reservation;
 import com.oceanview.resort.model.enums.ReservationStatus;
 import com.oceanview.resort.model.Room;
@@ -42,16 +39,10 @@ public class BillServiceImpl implements BillService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final RoomTypeRepository roomTypeRepository;
-    private final DiscountRepository discountRepository;
     private final UserRepository userRepository;
     private final ConfigService configService;
     private final DiscountCalculationManager discountCalculationManager;
 
-    /**
-     * Backwards-compatible constructor used in existing tests and older wiring code.
-     * Defaults to a static 10% tax rate to preserve previous behaviour.
-     * Creates a default DiscountCalculationManager with basic strategies.
-     */
     public BillServiceImpl(BillRepository billRepository, ReservationRepository reservationRepository,
                            RoomRepository roomRepository, RoomTypeRepository roomTypeRepository,
                            DiscountRepository discountRepository, UserRepository userRepository) {
@@ -72,20 +63,11 @@ public class BillServiceImpl implements BillService {
     public BillServiceImpl(BillRepository billRepository, ReservationRepository reservationRepository,
                            RoomRepository roomRepository, RoomTypeRepository roomTypeRepository,
                            DiscountRepository discountRepository, UserRepository userRepository,
-                           ConfigService configService) {
-        this(billRepository, reservationRepository, roomRepository, roomTypeRepository,
-                discountRepository, userRepository, configService, null);
-    }
-
-    public BillServiceImpl(BillRepository billRepository, ReservationRepository reservationRepository,
-                           RoomRepository roomRepository, RoomTypeRepository roomTypeRepository,
-                           DiscountRepository discountRepository, UserRepository userRepository,
                            ConfigService configService, DiscountCalculationManager discountCalculationManager) {
         this.billRepository = billRepository;
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
         this.roomTypeRepository = roomTypeRepository;
-        this.discountRepository = discountRepository;
         this.userRepository = userRepository;
         this.configService = configService;
         
@@ -191,15 +173,4 @@ public class BillServiceImpl implements BillService {
         return ChronoUnit.DAYS.between(checkIn, checkOut);
     }
 
-    /**
-     * @deprecated This method is replaced by Strategy Pattern implementation.
-     * Use DiscountCalculationManager instead.
-     * Kept for backward compatibility with tests that may call it directly.
-     */
-    @Deprecated
-    private BigDecimal resolveDiscountPercent(Reservation reservation, BigDecimal manualDiscountPercent, List<Long> discountIds) {
-        // Delegate to Strategy Pattern implementation
-        DiscountCalculationContext context = new DiscountCalculationContext(discountIds, manualDiscountPercent);
-        return discountCalculationManager.calculateTotalDiscount(reservation, context);
-    }
 }

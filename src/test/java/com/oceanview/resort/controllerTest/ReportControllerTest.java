@@ -32,11 +32,11 @@ public class ReportControllerTest {
     public void setUp() throws Exception {
         controller = new ReportController();
         reportService = mock(ReportService.class);
-        injectField(ReportController.class, controller, "reportService", reportService);
+        injectField(controller, reportService);
     }
 
-    private void injectField(Class<?> clazz, Object target, String fieldName, Object value) throws Exception {
-        java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+    private void injectField(Object target, Object value) throws Exception {
+        java.lang.reflect.Field field = ReportController.class.getDeclaredField("reportService");
         field.setAccessible(true);
         field.set(target, value);
     }

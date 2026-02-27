@@ -11,11 +11,9 @@ import java.util.List;
 
 /**
  * Strategy for applying manual discounts entered by staff.
- * 
  * This strategy:
  * - Retrieves the manual discount percentage from the context
  * - Returns it directly (no validation against active discounts)
- * 
  * Example: Staff member manually applies a 20% discount for special circumstances.
  */
 public class ManualDiscountStrategy implements DiscountCalculationStrategy {

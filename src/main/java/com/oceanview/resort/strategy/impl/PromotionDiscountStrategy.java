@@ -11,13 +11,6 @@ import java.util.List;
 
 /**
  * Strategy for calculating discounts based on selected promotion codes.
- * 
- * This strategy:
- * - Finds all active PROMOTION discounts
- * - Checks if the promotion IDs are selected in the context
- * - Sums up all applicable promotion discounts
- * 
- * Example: User selects "SUMMER2024" (10%) and "WEEKEND" (5%) promotions = 15% total.
  */
 public class PromotionDiscountStrategy implements DiscountCalculationStrategy {
     

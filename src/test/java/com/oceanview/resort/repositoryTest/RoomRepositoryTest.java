@@ -21,8 +21,8 @@ public class RoomRepositoryTest {
     private final RoomRepository repository = new RoomDAO();
     private long createdRoomId;
     private long createdTypeId;
-    private String roomNumber = "REPO_R" + (System.currentTimeMillis() % 100000);
-    private String typeName = "REPO_T" + (System.currentTimeMillis() % 100000);
+    private final String roomNumber = "REPO_R" + (System.currentTimeMillis() % 100000);
+    private final String typeName = "REPO_T" + (System.currentTimeMillis() % 100000);
 
     @Before
     public void setUp() {

@@ -112,7 +112,7 @@ public class DiscountServiceTest {
         Discount d = new Discount();
         d.setId(1L);
         d.setActive(true);
-        when(repository.findActive()).thenReturn(Arrays.asList(d));
+        when(repository.findActive()).thenReturn(List.of(d));
 
         List<DiscountDTO> result = discountService.findActive();
         assertNotNull(result);

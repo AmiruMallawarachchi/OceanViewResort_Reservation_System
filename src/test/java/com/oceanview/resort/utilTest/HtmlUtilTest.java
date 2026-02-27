@@ -1,4 +1,4 @@
-package com.oceanview.resort.UtilTest;
+package com.oceanview.resort.utilTest;
 
 import com.oceanview.resort.util.HtmlUtil;
 import org.junit.Assert;

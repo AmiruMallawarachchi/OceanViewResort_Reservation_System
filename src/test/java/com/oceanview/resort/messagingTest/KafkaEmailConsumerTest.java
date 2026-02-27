@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oceanview.resort.config.AppConfig;
 import com.oceanview.resort.messaging.KafkaEmailConsumer;
 import com.oceanview.resort.messaging.ReservationEmailEvent;
-import com.oceanview.resort.service.EmailService;
+import com.oceanview.resort.service.impl.EmailService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -34,7 +34,6 @@ public class KafkaEmailConsumerTest {
     private KafkaConsumer<String, String> mockConsumer;
 
     private KafkaEmailConsumer consumer;
-    private Properties testProperties;
 
     @Before
     public void setUp() throws Exception {
@@ -43,7 +42,7 @@ public class KafkaEmailConsumerTest {
         // Set up test properties for AppConfig
         Field propsField = AppConfig.class.getDeclaredField("PROPERTIES");
         propsField.setAccessible(true);
-        testProperties = (Properties) propsField.get(null);
+        Properties testProperties = (Properties) propsField.get(null);
         testProperties.setProperty("kafka.bootstrap.servers", "localhost:9092");
         testProperties.setProperty("kafka.consumer.group", "test-group");
         testProperties.setProperty("kafka.topic.reservation.email", "test-topic");

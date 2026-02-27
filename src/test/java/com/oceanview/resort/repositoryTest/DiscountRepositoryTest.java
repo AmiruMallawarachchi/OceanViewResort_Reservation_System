@@ -7,7 +7,6 @@ import com.oceanview.resort.model.enums.GuestType;
 import com.oceanview.resort.repository.DiscountRepository;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -20,7 +19,7 @@ public class DiscountRepositoryTest {
 
     private final DiscountRepository repository = new DiscountDAO();
     private long createdId;
-    private String namePrefix = "REPO_DISC_" + System.currentTimeMillis();
+    private final String namePrefix = "REPO_DISC_" + System.currentTimeMillis();
 
     @After
     public void tearDown() {
